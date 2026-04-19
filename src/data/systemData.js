@@ -45,7 +45,7 @@ export const tierMeta = {
   },
 }
 
-const positions = {
+const knownPositions = {
   SKILL: { x: 0, y: 80 },
   'comprehension-protocol': { x: -580, y: 310 },
   'confusion-triage': { x: -348, y: 310 },
@@ -68,9 +68,8 @@ const positions = {
   'measurement-framework': { x: 232, y: 1210 },
 }
 
-const metadata = {
+const curatedMetadata = {
   SKILL: {
-    file: 'SKILL.md',
     tier: 'orchestration',
     weight: 100,
     status: 'master-map',
@@ -91,7 +90,6 @@ const metadata = {
     ],
   },
   'comprehension-protocol': {
-    file: 'comprehension-protocol.md',
     tier: 'comprehension',
     weight: 96,
     status: 'core',
@@ -106,7 +104,6 @@ const metadata = {
     related: ['confusion-triage', 'concept-encoding', 'metacognitive-checklist'],
   },
   'confusion-triage': {
-    file: 'confusion-triage.md',
     tier: 'comprehension',
     weight: 70,
     status: 'support',
@@ -121,7 +118,6 @@ const metadata = {
     related: ['comprehension-protocol', 'heuristic-palace'],
   },
   'heuristic-palace': {
-    file: 'heuristic-palace.md',
     tier: 'comprehension',
     weight: 88,
     status: 'core',
@@ -136,7 +132,6 @@ const metadata = {
     related: ['domain-patterns', 'triz', 'measurement-framework'],
   },
   'domain-patterns': {
-    file: 'domain-patterns.md',
     tier: 'comprehension',
     weight: 78,
     status: 'growth-layer',
@@ -151,7 +146,6 @@ const metadata = {
     related: ['heuristic-palace', 'triz', 'metacognitive-checklist'],
   },
   triz: {
-    file: 'triz.md',
     tier: 'comprehension',
     weight: 74,
     status: 'specialist',
@@ -166,7 +160,6 @@ const metadata = {
     related: ['heuristic-palace', 'domain-patterns'],
   },
   'metacognitive-checklist': {
-    file: 'metacognitive-checklist.md',
     tier: 'comprehension',
     weight: 72,
     status: 'governance',
@@ -181,7 +174,6 @@ const metadata = {
     related: ['measurement-framework', 'comprehension-protocol'],
   },
   'concept-encoding': {
-    file: 'concept-encoding.md',
     tier: 'concept',
     weight: 86,
     status: 'core',
@@ -196,7 +188,6 @@ const metadata = {
     related: ['comprehension-protocol', 'formulas', 'retrieval-protocol', 'collisions'],
   },
   formulas: {
-    file: 'formulas.md',
     tier: 'concept',
     weight: 76,
     status: 'specialist',
@@ -211,7 +202,6 @@ const metadata = {
     related: ['concept-encoding', 'retrieval-protocol'],
   },
   'georgian-system': {
-    file: 'georgian-system.md',
     tier: 'concept',
     weight: 82,
     status: 'core',
@@ -226,7 +216,6 @@ const metadata = {
     related: ['cast-system', 'cast-edges'],
   },
   'cast-system': {
-    file: 'cast-system.md',
     tier: 'concept',
     weight: 94,
     status: 'core',
@@ -241,7 +230,6 @@ const metadata = {
     related: ['georgian-system', 'cast-edges', 'binary-hex', 'retrieval-protocol', 'collisions'],
   },
   'cast-edges': {
-    file: 'cast-edges.md',
     tier: 'concept',
     weight: 54,
     status: 'legacy',
@@ -256,7 +244,6 @@ const metadata = {
     related: ['cast-system'],
   },
   'major-system': {
-    file: 'major-system.md',
     tier: 'numeric',
     weight: 92,
     status: 'foundation',
@@ -271,7 +258,6 @@ const metadata = {
     related: ['pao', 'sem3-full', 'encoding-examples'],
   },
   pao: {
-    file: 'pao.md',
     tier: 'numeric',
     weight: 78,
     status: 'core',
@@ -286,7 +272,6 @@ const metadata = {
     related: ['major-system', 'encoding-examples', 'retrieval-protocol'],
   },
   'sem3-full': {
-    file: 'sem3-full.md',
     tier: 'numeric',
     weight: 84,
     status: 'core',
@@ -301,7 +286,6 @@ const metadata = {
     related: ['major-system', 'encoding-examples'],
   },
   'binary-hex': {
-    file: 'binary-hex.md',
     tier: 'numeric',
     weight: 88,
     status: 'bridge',
@@ -316,7 +300,6 @@ const metadata = {
     related: ['cast-system', 'encoding-examples', 'collisions'],
   },
   'encoding-examples': {
-    file: 'encoding-examples.md',
     tier: 'numeric',
     weight: 64,
     status: 'reference',
@@ -331,7 +314,6 @@ const metadata = {
     related: ['major-system', 'pao', 'sem3-full', 'binary-hex'],
   },
   'retrieval-protocol': {
-    file: 'retrieval-protocol.md',
     tier: 'operations',
     weight: 90,
     status: 'core',
@@ -346,7 +328,6 @@ const metadata = {
     related: ['measurement-framework', 'collisions', 'concept-encoding', 'cast-system', 'pao'],
   },
   collisions: {
-    file: 'collisions.md',
     tier: 'operations',
     weight: 66,
     status: 'maintenance',
@@ -361,7 +342,6 @@ const metadata = {
     related: ['concept-encoding', 'cast-system', 'binary-hex', 'retrieval-protocol'],
   },
   'measurement-framework': {
-    file: 'measurement-framework.md',
     tier: 'operations',
     weight: 82,
     status: 'governance',
@@ -377,7 +357,7 @@ const metadata = {
   },
 }
 
-const edgePairs = [
+const curatedEdgePairs = [
   ['SKILL', 'comprehension-protocol'],
   ['SKILL', 'concept-encoding'],
   ['SKILL', 'major-system'],
@@ -430,34 +410,210 @@ function cleanParagraph(text) {
 
 function extractTitle(content, fallback) {
   const match = content.match(/^#\s+(.+)$/m)
-  return match ? match[1].trim() : fallback.replace('.md', '')
+  return match ? match[1].trim() : fallback
 }
 
-function getRawContent(file) {
-  return rawDocs[`../../../theSystem/${file}`] || ''
+function toTitleCase(value) {
+  return value
+    .split(/[-\s]+/)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ')
 }
 
-export const systemDocs = Object.entries(metadata).map(([id, meta]) => {
-  const content = getRawContent(meta.file)
+function extractHighlights(content) {
+  const bullets = content
+    .split('\n')
+    .map((line) => line.trim())
+    .filter((line) => /^[-*]\s+/.test(line))
+    .map((line) => line.replace(/^[-*]\s+/, '').replace(/[*`]/g, '').trim())
+    .filter((line) => line.length > 20)
+
+  return bullets.slice(0, 3)
+}
+
+function inferTier(id, content) {
+  if (id === 'SKILL') return 'orchestration'
+
+  if (
+    /(comprehension|confusion|heuristic|pattern|triz|metacognitive)/i.test(id) ||
+    /(understand|problem-solving|confusion|heuristic|contradiction)/i.test(content)
+  ) {
+    return 'comprehension'
+  }
+
+  if (
+    /(concept|formula|georgian|cast)/i.test(id) ||
+    /(graph|formula|symbolic|concept|node|edge)/i.test(content)
+  ) {
+    return 'concept'
+  }
+
+  if (
+    /(major|pao|sem3|binary|hex|encoding-examples)/i.test(id) ||
+    /(digit|numeric|number|byte|hex|binary)/i.test(content)
+  ) {
+    return 'numeric'
+  }
+
+  return 'operations'
+}
+
+function inferStatus(id, content) {
+  if (id === 'SKILL') return 'master-map'
+  if (/superseded|legacy/i.test(content)) return 'legacy'
+  if (/protocol/i.test(id) || /canonical|core principle|first-class system/i.test(content)) {
+    return 'core'
+  }
+  if (/framework|checklist/i.test(id)) return 'governance'
+  if (/example|collision/i.test(id)) return 'reference'
+  return 'support'
+}
+
+function inferWeight(id, tier) {
+  if (id === 'SKILL') return 100
+
+  const tierBase = {
+    orchestration: 96,
+    comprehension: 78,
+    concept: 80,
+    numeric: 76,
+    operations: 72,
+  }
+
+  return tierBase[tier] || 72
+}
+
+function inferShortLabel(id, title) {
+  if (id === 'SKILL') return 'Skill'
+
+  const cleanedTitle = title
+    .replace(/^The\s+/i, '')
+    .replace(/\bSystem\b/i, '')
+    .replace(/\bProtocol\b/i, 'Protocol')
+    .trim()
+
+  const compact = cleanedTitle.split(/[\s:/()]+/).filter(Boolean).slice(0, 3).join(' ')
+  return compact.length <= 24 ? compact : toTitleCase(id)
+}
+
+function extractSummary(content, fallbackTitle) {
+  const paragraph = cleanParagraph(content)
+  if (paragraph) {
+    return paragraph.length > 190 ? `${paragraph.slice(0, 187).trim()}...` : paragraph
+  }
+
+  return `${fallbackTitle} from the current theSystem folder.`
+}
+
+function buildRelatedFromContent(id, content, knownIds) {
+  return knownIds.filter((candidate) => {
+    if (candidate === id) return false
+    return (
+      content.includes(`${candidate}.md`) ||
+      content.includes(`\`${candidate}.md\``) ||
+      content.includes(`\`${candidate}\``)
+    )
+  })
+}
+
+const docRecords = Object.entries(rawDocs)
+  .map(([path, content]) => {
+    const file = path.split('/').pop()
+    const id = file.replace(/\.md$/, '')
+    return { id, file, content }
+  })
+  .sort((a, b) => {
+    if (a.id === 'SKILL') return -1
+    if (b.id === 'SKILL') return 1
+    return a.id.localeCompare(b.id)
+  })
+
+const docIds = new Set(docRecords.map((record) => record.id))
+
+function buildPositionMap(records) {
+  const taken = new Set(Object.keys(knownPositions))
+  const byTier = records.reduce((acc, record) => {
+    const tier = curatedMetadata[record.id]?.tier || inferTier(record.id, record.content)
+    if (!acc[tier]) acc[tier] = []
+    if (!knownPositions[record.id]) acc[tier].push(record.id)
+    return acc
+  }, {})
+
+  const generated = {}
+  const rowY = {
+    orchestration: 80,
+    comprehension: 310,
+    concept: 610,
+    numeric: 910,
+    operations: 1210,
+  }
+
+  tierOrder.forEach((tierId) => {
+    const ids = byTier[tierId] || []
+    ids.forEach((id, index) => {
+      if (taken.has(id)) return
+      generated[id] = {
+        x: -580 + index * 232,
+        y: rowY[tierId] + 180,
+      }
+    })
+  })
+
+  return { ...knownPositions, ...generated }
+}
+
+const positions = buildPositionMap(docRecords)
+
+export const systemDocs = docRecords.map(({ id, file, content }) => {
+  const title = extractTitle(content, file.replace('.md', ''))
+  const tier = curatedMetadata[id]?.tier || inferTier(id, content)
+  const autoHighlights = extractHighlights(content)
+  const relatedFromContent = buildRelatedFromContent(id, content, [...docIds])
+
   return {
     id,
-    ...meta,
-    title: extractTitle(content, meta.file),
+    file,
+    tier,
+    weight: curatedMetadata[id]?.weight || inferWeight(id, tier),
+    status: curatedMetadata[id]?.status || inferStatus(id, content),
+    shortLabel: curatedMetadata[id]?.shortLabel || inferShortLabel(id, title),
+    summary: curatedMetadata[id]?.summary || extractSummary(content, title),
+    highlights:
+      curatedMetadata[id]?.highlights ||
+      (autoHighlights.length ? autoHighlights : ['Derived from the current markdown source.']),
+    related: (curatedMetadata[id]?.related || relatedFromContent).filter((relatedId) =>
+      docIds.has(relatedId),
+    ),
+    title,
     content,
     excerpt: cleanParagraph(content),
     position: positions[id],
   }
 })
 
-export const systemDocMap = Object.fromEntries(
-  systemDocs.map((doc) => [doc.id, doc]),
-)
+export const systemDocMap = Object.fromEntries(systemDocs.map((doc) => [doc.id, doc]))
 
-export const systemEdges = edgePairs.map(([source, target]) => ({
-  id: `${source}->${target}`,
-  source,
-  target,
-}))
+const edgeKeys = new Set()
+
+function addEdge(source, target) {
+  if (!docIds.has(source) || !docIds.has(target) || source === target) return
+  edgeKeys.add(`${source}->${target}`)
+}
+
+curatedEdgePairs.forEach(([source, target]) => addEdge(source, target))
+systemDocs.forEach((doc) => {
+  doc.related.forEach((relatedId) => addEdge(doc.id, relatedId))
+})
+
+export const systemEdges = [...edgeKeys].map((key) => {
+  const [source, target] = key.split('->')
+  return {
+    id: key,
+    source,
+    target,
+  }
+})
 
 export const systemStats = {
   docCount: systemDocs.length,

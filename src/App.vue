@@ -11,7 +11,7 @@ import {
   tierOrder,
 } from './data/systemData'
 
-const selectedDocId = ref('SKILL')
+const selectedDocId = ref(systemDocs[0]?.id || '')
 const activeTier = ref('all')
 const searchTerm = ref('')
 
