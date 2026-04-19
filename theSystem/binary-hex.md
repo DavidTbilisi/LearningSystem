@@ -1,0 +1,200 @@
+# Binary & Hex — Unified Elemental System
+
+A single cross-matrix encodes **hex digits (0–F)**, **4-bit nibbles**, and
+**8-bit bytes**. All three share the same elemental vocabulary, so learning
+one unlocks the others.
+
+---
+
+## The Core 4-Bit Matrix
+
+Every 4-bit value (hex 0–F) = **Element × State**.
+
+- **High bits (0–1): Element** — 00 Earth · 01 Water · 10 Air · 11 Fire
+- **Low bits (2–3): State** — 00 Solid · 01 Liquid · 10 Gas · 11 Plasma
+
+```
+                    STATE →
+                    00 Solid   01 Liquid   10 Gas      11 Plasma
+ELEMENT ↓
+00 Earth            0 (rock)   1 (mud)     2 (dust)    3 (magma)
+01 Water            4 (ice)    5 (ocean)   6 (mist)    7 (storm)
+10 Air              8 (crystal)9 (dew)     A (breeze)  B (aurora)
+11 Fire             C (ember)  D (lava)    E (smoke)   F (inferno)
+```
+
+---
+
+## Hex 0–F — Canonical Scenes
+
+| Hex | Bits | Element | State | Scene |
+|-----|------|---------|-------|-------|
+| **0** | 0000 | Earth | Solid | 🪨 Rock wall |
+| **1** | 0001 | Earth | Liquid | 🟫 Mud pit |
+| **2** | 0010 | Earth | Gas | 🌫️ Dust cloud |
+| **3** | 0011 | Earth | Plasma | 🌋 Magma flow |
+| **4** | 0100 | Water | Solid | 🧊 Ice block |
+| **5** | 0101 | Water | Liquid | 🌊 Ocean wave |
+| **6** | 0110 | Water | Gas | 💨 Mist veil |
+| **7** | 0111 | Water | Plasma | ⛈️ Lightning storm |
+| **8** | 1000 | Air | Solid | 💎 Crystal |
+| **9** | 1001 | Air | Liquid | 💧 Dew drop |
+| **A** | 1010 | Air | Gas | 🌬️ Breeze |
+| **B** | 1011 | Air | Plasma | 🌌 Aurora |
+| **C** | 1100 | Fire | Solid | 🧱 Ember (glowing coal) |
+| **D** | 1101 | Fire | Liquid | 🌋 Lava flow |
+| **E** | 1110 | Fire | Gas | 💨 Smoke column |
+| **F** | 1111 | Fire | Plasma | 🔥 Inferno wall |
+
+**Note:** Some scenes collide visually (3 magma vs D lava, 6 mist vs E smoke).
+Disambiguate by the *element source*:
+- 3 (magma) = *earth* becoming extreme → erupting ground
+- D (lava) = *fire* becoming liquid → flowing from volcano mouth
+- 6 (mist) = *water* softening → cool rising vapor
+- E (smoke) = *fire* becoming gas → dark rising column
+
+---
+
+## 4-Bit Nibbles — Same Table, Binary Notation
+
+A 4-bit value = one hex scene. Use when encoding binary directly:
+
+- `1010` → A → Breeze
+- `0101` → 5 → Ocean wave
+- `1111` → F → Inferno wall
+
+Two nibbles chain to form a byte (see 8-bit section).
+
+---
+
+## 8-Bit Bytes — The Full Cross-Matrix
+
+An 8-bit byte uses **two 4-bit matrices** stacked into one scene with four slots.
+This is the same structure as CAST (which specializes for network edges).
+
+### Bit layout
+
+```
+Bits:    A B  C D  E F  G H
+Slot:    [ AB ][ CD ][ EF ][ GH ]
+Matrix1: [Element][State]   = Character × Form
+Matrix2: [Element][State]   = Object    × Setting
+```
+
+### Slot meanings
+
+| Bits | Slot | Role | Element axis | State axis |
+|------|------|------|--------------|------------|
+| AB | Character (Person) | *Who* acts | 00 Giant (earth), 01 Mermaid (water), 10 Mage (air), 11 Dragon (fire) | — |
+| CD | Form (Action) | *How* they act | — | 00 crushing (solid), 01 flowing (liquid), 10 spreading (gas), 11 exploding (plasma) |
+| EF | Object | *What* is acted on | 00 rock (earth), 01 water, 10 cloud (air), 11 lightning (fire) | — |
+| GH | Setting (Environment) | *Where/when* | — | 00 red cave (solid), 01 blue ocean (liquid), 10 green sky (gas), 11 purple storm (plasma) |
+
+### The cross-matrix insight
+
+Core scene = **AB × GH** (Character × Setting).
+CD (Form) and EF (Object) add variation and detail.
+
+This means you can *read a byte at a glance* by just checking the outer 4 bits
+(AB + GH) for the scene skeleton, and use the inner 4 bits (CD + EF) to refine.
+
+### Full 8-bit lookup rules
+
+```
+Scene template: "[AB emoji] [AB name] [CD action] [EF emoji] [EF object] in [GH setting]"
+
+AB (Character):
+  00 🗿 Giant    01 🧜 Mermaid   10 🧙 Mage    11 🐉 Dragon
+CD (Action):
+  00 crushing   01 flowing      10 spreading  11 exploding
+EF (Object):
+  00 🧱 rock    01 💧 water     10 ☁️ cloud    11 ⚡ lightning
+GH (Setting):
+  00 🪨 red cave    01 🌊 blue ocean
+  10 ☁️ green sky   11 🌋 purple storm volcano
+```
+
+### Example encodings
+
+| Byte | AB | CD | EF | GH | Scene |
+|------|----|----|----|----|-------|
+| `00000000` | Giant | crushing | rock | red cave | *Giant crushing rock in red cave* |
+| `01011010` | Mermaid | flowing | cloud | green sky | *Mermaid flowing cloud in green sky* |
+| `10110011` | Mage | exploding | rock | purple storm | *Mage exploding rock in purple storm* |
+| `11111111` | Dragon | exploding | lightning | purple storm | *Dragon exploding lightning in purple storm* |
+
+---
+
+## Reading Speed Drill
+
+To hit recall speed targets:
+
+1. **Single hex digit** → scene in < 1 second (16 scenes to memorize)
+2. **Hex pair (byte)** → two scenes in < 2 seconds
+3. **Full 8-bit byte (CAST-style composite scene)** → < 3 seconds
+
+Practice path:
+- Week 1: Drill hex 0–F → scene (front) and scene → hex (back). Anki both directions.
+- Week 2: Drill hex pairs (00–FF) as two-scene pairs.
+- Week 3: Drill 8-bit composite scenes for CAST and binary data.
+
+---
+
+## Relationship to CAST
+
+CAST is the **specialized version** of the 8-bit system for network edges:
+
+| 8-bit generic | CAST specialization |
+|---------------|---------------------|
+| AB = Character | AB = Source role + direction |
+| CD = Form/Action | CD = Relationship type + strength |
+| EF = Object | EF = Stream (what flows) |
+| GH = Setting | GH = Time (stability) |
+
+The imagery is identical. CAST just assigns **semantic roles** to each slot
+for the graph-encoding use case. If you know the 8-bit system, you know CAST.
+
+### Explicit slot-value mapping
+
+The elemental "state" axis maps to CAST action verbs, and the elemental
+"element" axis maps to CAST objects. Same 4 values per slot, different names:
+
+| Bits | State (elemental) | Action (CAST) |
+|------|-------------------|---------------|
+| 00 | Solid | crushing |
+| 01 | Liquid | flowing |
+| 10 | Gas | spreading |
+| 11 | Plasma | exploding |
+
+| Bits | Element (elemental) | Stream (CAST) |
+|------|---------------------|---------------|
+| 00 | Earth | rock |
+| 01 | Water | water |
+| 10 | Air | cloud |
+| 11 | Fire | lightning |
+
+So "solid earth" (hex 0) = "crushing rock" (CAST 00-stream-00). The verb form
+is what changes when you shift from binary-value thinking to edge-relationship
+thinking.
+
+---
+
+## Decision Rule: When to Use Which
+
+| Data | Use |
+|------|-----|
+| A single hex digit (color value, single nibble) | 4-bit / hex table |
+| A binary nibble | 4-bit table |
+| A hex pair / byte (file header, memory value) | 8-bit byte |
+| A binary byte | 8-bit byte |
+| A network edge property bundle | CAST (same bits, semantic roles) |
+| Longer binary (16-bit, 32-bit) | Chain of bytes, one per locus in palace |
+
+---
+
+## Key Principles
+
+1. **One matrix, three uses.** Hex, binary, and CAST all draw from the same elemental vocabulary. Learn once, use everywhere.
+2. **Element = identity, State = behavior.** Every 4-bit scene is "what thing, in what form."
+3. **AB × GH is the skeleton.** For 8-bit, get the outer bits first for the scene shape, then fill in CD and EF for detail.
+4. **Elements are emotional anchors.** Earth is heavy/permanent, Water is fluid/change, Air is subtle/invisible, Fire is transformation/destruction. These associations help recall under stress.

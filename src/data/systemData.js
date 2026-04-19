@@ -1,4 +1,4 @@
-const rawDocs = import.meta.glob('../../../theSystem/*.md', {
+const rawDocs = import.meta.glob('../../theSystem/*.md', {
   query: '?raw',
   import: 'default',
   eager: true,
