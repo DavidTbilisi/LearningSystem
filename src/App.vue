@@ -56,7 +56,7 @@ function selectDoc(docOrId) {
         </p>
         <p class="hero-text emphasis">
           Current emphasis: <strong>Comprehension + Problem Solving</strong> and
-          <strong> Concept + Graph Encoding</strong>.
+          <strong> Concept + Procedure + Graph Encoding</strong>.
         </p>
       </div>
 

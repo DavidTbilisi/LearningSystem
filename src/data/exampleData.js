@@ -204,6 +204,48 @@ export const docExamples = {
       ],
     },
   ],
+  'procedure-encoding': [
+    {
+      id: 'binary-search-spear',
+      title: 'Procedure -> SPEAR frame',
+      inputLabel: 'Forward input',
+      inputValue: 'Procedure: binary search',
+      outputLabel: 'Resulting frame',
+      outputValue:
+        'Scene: librarian halving books. Preconditions: sorted doorway. Execution: compare middle, discard one side, repeat. Alternatives: safer midpoint. Repair: check left/right updates.',
+      backwardPrompt:
+        'You see a librarian halving a sorted stack of books, with an inspector checking whether the search bounds move. Which procedure frame is that?',
+      backwardAnswer:
+        'Binary search encoded with SPEAR -> Scene, Preconditions, Execution, Alternatives, Repair',
+      steps: [
+        {
+          label: 'Scene',
+          forward: 'Use one moving anchor image for the whole procedure: a librarian cutting the search space in half.',
+          backward: 'The halving librarian identifies binary search as the overall executable gestalt.',
+        },
+        {
+          label: 'Preconditions',
+          forward: 'Place a sorted doorway before the library to mark that the data must already be ordered.',
+          backward: 'The locked or unlocked sorted gate tells you whether the procedure is even valid to run.',
+        },
+        {
+          label: 'Execution',
+          forward: 'Encode the loop as compare middle, discard one half, and recurse on the remaining stack.',
+          backward: 'Repeated halving and comparison is the executable core of the algorithm.',
+        },
+        {
+          label: 'Alternatives',
+          forward: 'Add a side signpost for the safer midpoint formula or other branch-specific variants.',
+          backward: 'The signpost marks a known alternate path without replacing the main execution chain.',
+        },
+        {
+          label: 'Repair',
+          forward: 'Bring in an inspector who checks whether left and right bounds actually update when the loop misbehaves.',
+          backward: 'The repair character tells you how to recover when the encoded procedure goes wrong.',
+        },
+      ],
+    },
+  ],
   'cast-system': [
     {
       id: 'cast-edge-read',

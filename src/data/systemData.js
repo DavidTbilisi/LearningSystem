@@ -27,8 +27,8 @@ export const tierMeta = {
   },
   concept: {
     id: 'concept',
-    label: 'Concept + Graph Encoding',
-    subtitle: 'How abstract knowledge becomes scenes and networks',
+    label: 'Concept + Procedure + Graph Encoding',
+    subtitle: 'How abstract knowledge becomes scenes, procedures, and networks',
     color: '#39b88f',
   },
   numeric: {
@@ -57,7 +57,7 @@ const knownPositions = {
   formulas: { x: -232, y: 610 },
   'georgian-system': { x: 0, y: 610 },
   'cast-system': { x: 232, y: 610 },
-  'cast-edges': { x: 464, y: 610 },
+  'procedure-encoding': { x: 464, y: 610 },
   'major-system': { x: -464, y: 910 },
   pao: { x: -232, y: 910 },
   'sem3-full': { x: 0, y: 910 },
@@ -84,6 +84,7 @@ const curatedMetadata = {
     related: [
       'comprehension-protocol',
       'concept-encoding',
+      'procedure-encoding',
       'major-system',
       'cast-system',
       'retrieval-protocol',
@@ -187,6 +188,20 @@ const curatedMetadata = {
     ],
     related: ['comprehension-protocol', 'formulas', 'retrieval-protocol', 'collisions'],
   },
+  'procedure-encoding': {
+    tier: 'concept',
+    weight: 84,
+    status: 'core',
+    shortLabel: 'SPEAR',
+    summary:
+      'The SPEAR protocol for encoding procedures, algorithms, proofs, and executable sequences without losing branching or repair.',
+    highlights: [
+      'Uses Scene, Preconditions, Execution, Alternatives, and Repair',
+      'Matches encoding style to procedure length and complexity',
+      'Bridges procedural memory with palaces, CAST, and Anki execution cards',
+    ],
+    related: ['concept-encoding', 'heuristic-palace', 'domain-patterns', 'retrieval-protocol'],
+  },
   formulas: {
     tier: 'concept',
     weight: 76,
@@ -213,7 +228,7 @@ const curatedMetadata = {
       'Uses fixed animal, adjective, and environment anchors',
       'Pairs naturally with CAST',
     ],
-    related: ['cast-system', 'cast-edges'],
+    related: ['cast-system'],
   },
   'cast-system': {
     tier: 'concept',
@@ -227,21 +242,7 @@ const curatedMetadata = {
       'Scales to codebases, proofs, history, and arguments',
       'Shares structure with the generic byte system',
     ],
-    related: ['georgian-system', 'cast-edges', 'binary-hex', 'retrieval-protocol', 'collisions'],
-  },
-  'cast-edges': {
-    tier: 'concept',
-    weight: 54,
-    status: 'legacy',
-    shortLabel: 'Legacy CAST',
-    summary:
-      'A legacy pointer to the original CAST edge framing, retained as historical context for the newer system.',
-    highlights: [
-      'Documents the predecessor terminology',
-      'Useful for tracing system evolution',
-      'Superseded by cast-system.md',
-    ],
-    related: ['cast-system'],
+    related: ['georgian-system', 'binary-hex', 'procedure-encoding', 'retrieval-protocol', 'collisions'],
   },
   'major-system': {
     tier: 'numeric',
@@ -360,6 +361,7 @@ const curatedMetadata = {
 const curatedEdgePairs = [
   ['SKILL', 'comprehension-protocol'],
   ['SKILL', 'concept-encoding'],
+  ['SKILL', 'procedure-encoding'],
   ['SKILL', 'major-system'],
   ['SKILL', 'cast-system'],
   ['SKILL', 'retrieval-protocol'],
@@ -374,11 +376,15 @@ const curatedEdgePairs = [
   ['domain-patterns', 'metacognitive-checklist'],
   ['metacognitive-checklist', 'measurement-framework'],
   ['concept-encoding', 'formulas'],
+  ['concept-encoding', 'procedure-encoding'],
   ['concept-encoding', 'retrieval-protocol'],
   ['concept-encoding', 'collisions'],
+  ['procedure-encoding', 'heuristic-palace'],
+  ['procedure-encoding', 'domain-patterns'],
+  ['procedure-encoding', 'retrieval-protocol'],
   ['georgian-system', 'cast-system'],
-  ['cast-edges', 'cast-system'],
   ['cast-system', 'binary-hex'],
+  ['cast-system', 'procedure-encoding'],
   ['cast-system', 'retrieval-protocol'],
   ['cast-system', 'collisions'],
   ['major-system', 'pao'],

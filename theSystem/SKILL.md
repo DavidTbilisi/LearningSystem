@@ -41,6 +41,7 @@ Comprehension & problem-solving
 
 Non-numeric encoding
   NEDF                    — concepts (Name · Essence · Distinguisher · Failure)
+  SPEAR                   — procedures (Scene · Preconditions · Execution · Alternatives · Repair)
   Formulas                — symbols + zones (Greek, operators, positional structure)
   CAST + Georgian         — networks (nodes + edges, full relational system)
 
@@ -188,7 +189,15 @@ Full 100-entry table: `references/sem3-full.md`
 - **Role:** anything that is a *thing* (concept, term, model, principle)
 - **When to use:** the concept has a name you need to retrieve from, and it has a classic failure mode worth knowing
 
-#### 8. CAST + Georgian Node System — Relational Encoding
+#### 8. SPEAR — Procedure Encoding
+- Encodes **algorithms, proof sequences, protocols, and any ordered process** via 5 slots:
+  - **S**cene · **P**reconditions · **E**xecution · **A**lternatives · **R**epair
+- Three execution styles: causal chain (≤7 steps), spatial path (8–20 steps), recursive scene
+- Full protocol + worked examples: `references/procedure-encoding.md`
+- **Role:** anything with steps and order-dependency (algorithms, debugging procedures, proof templates, heuristic sequences)
+- **When to use:** if the learning-load is in *how to do something*, not *what something is* (NEDF) or *how things connect* (CAST)
+
+#### 9. CAST + Georgian Node System — Relational Encoding
 - **Nodes** encoded via Georgian letters (Animal + Person + Adjective + Environment — all starting with the same Georgian letter sound)
 - **Edges** encoded via CAST (8 bits = 4 slots):
   - **C**haracter (source role + direction) · **A**ction (type + strength) · **S**tream (what flows) · **T**ime (stability)
@@ -197,7 +206,7 @@ Full 100-entry table: `references/sem3-full.md`
 - **Role:** anything relational — codebases, math dependencies, historical causation, argument structures
 - **When to use:** the learning-load is in the *connections*, not the things
 
-#### 9. Formula System — Symbolic Encoding
+#### 10. Formula System — Symbolic Encoding
 - Encodes **Greek letters, operators, quantifiers, and structural positions** into scenes
 - Three layers: atom library (Greek + operators as images), structural zones (up/down/left/right/center of scene), composition (sequential / structural / hybrid modes)
 - Full system: `references/formulas.md`
@@ -206,19 +215,19 @@ Full 100-entry table: `references/sem3-full.md`
 
 ### Operational Layer
 
-#### 10. Mind Palace
+#### 11. Mind Palace
 - **Spatial container** — organizes encoded images; does not encode
 - Bind a palace to a real location that has semantic meaning for the domain
 - Palace = *context prefix*; all images inside inherit the location's meaning
 - Loci within the palace = specific spots where scenes are placed
 
-#### 11. Retrieval Protocol
+#### 12. Retrieval Protocol
 - Thin layer on top of Anki: card templates per system + palace-walk cadence + weak-link repair
 - Anki handles card-level scheduling; this protocol handles what Anki can't (palace topology, speed training, scene decay repair)
 - Full protocol: `references/retrieval-protocol.md`
 - **Role:** the consolidation layer — what actually turns encoded scenes into durable, fast recall
 
-#### 12. Measurement Framework
+#### 13. Measurement Framework
 - **6 dimensions:** Speed · Accuracy · Depth · Durability · Application · Process
 - Each has 7 belt ranks (White → Black) with quantitative thresholds
 - **Daily 30-second log** + weekly Anki pull + monthly belt tests + quarterly audits
@@ -246,7 +255,7 @@ Full 100-entry table: `references/sem3-full.md`
 | Encoding a **thing / concept / definition** | **NEDF** (concept-encoding.md) |
 | Encoding a **relationship / flow / dependency** | **CAST** (cast-system.md) |
 | Encoding a **network of things + relationships** | **Georgian nodes + CAST edges** |
-| Encoding a **procedure / algorithm** (ordered steps) | **PAO chain** — one mini-story per step |
+| Encoding a **procedure / algorithm** (ordered steps) | **SPEAR** (procedure-encoding.md) — Scene · Preconditions · Execution · Alternatives · Repair |
 | Encoding a **formula / symbolic expression** | **Formula system** (formulas.md) |
 | Encoding a **date** (month + day) | Georgian letter (month) + Major image (day) |
 | Encoding a **33-item ordered list** | Georgian letter sequence |
@@ -351,6 +360,7 @@ When the user wants to create a new deck or encoding scheme:
 
 ### Non-numeric
 - `references/concept-encoding.md` — NEDF protocol for concepts and definitions
+- `references/procedure-encoding.md` — SPEAR protocol for algorithms, processes, proof sequences (5 slots: Scene, Preconditions, Execution, Alternatives, Repair; 3 styles: causal chain, spatial path, recursive)
 - `references/formulas.md` — Formula / symbolic encoding (Greek letters, operators, structural zones)
 - `references/georgian-system.md` — 33-letter Georgian system (nodes, calendar, 33-slot peg)
 - `references/cast-system.md` — CAST edges + graph encoding across domains (code, math, history, argument)
