@@ -1,5 +1,5 @@
 <template>
-  <div class="doc-view">
+  <article class="doc-view">
     <div class="doc-header">
       <div class="tier-pill" :style="{ borderColor: tier.color, color: tier.color }">
         {{ tier.label }}
@@ -12,19 +12,12 @@
       <p>{{ doc.summary }}</p>
     </div>
 
-    <section class="doc-section">
+    <section class="doc-section doc-section-intro">
       <h3>Why it matters</h3>
       <p>{{ doc.excerpt || doc.summary }}</p>
     </section>
 
     <section class="doc-section">
-      <h3>Load-bearing moves</h3>
-      <ul class="highlight-list">
-        <li v-for="item in doc.highlights" :key="item">{{ item }}</li>
-      </ul>
-    </section>
-
-    <section v-if="relatedDocs.length" class="doc-section">
       <h3>Connected files</h3>
       <div class="related-grid">
         <button
@@ -38,30 +31,16 @@
       </div>
     </section>
 
-    <section v-if="examples.length" class="doc-section">
-      <h3>Step-through examples</h3>
-      <ExampleStepper :examples="examples" />
+    <section class="doc-section">
+      <h3>Markdown document</h3>
+      <div class="markdown-body" v-html="renderedMarkdown"></div>
     </section>
-
-    <section v-if="doc.id === 'binary-hex'" class="doc-section">
-      <h3>Embedded visual</h3>
-      <BinaryHexMatrix />
-      <BinaryHexByteVisualizer />
-    </section>
-
-    <details class="raw-content">
-      <summary>Open raw source</summary>
-      <pre>{{ doc.content }}</pre>
-    </details>
-  </div>
+  </article>
 </template>
 
 <script setup>
 import { computed } from 'vue'
-import BinaryHexByteVisualizer from './BinaryHexByteVisualizer.vue'
-import BinaryHexMatrix from './BinaryHexMatrix.vue'
-import ExampleStepper from './ExampleStepper.vue'
-import { docExamples } from '../data/exampleData'
+import { marked } from 'marked'
 
 const props = defineProps({
   doc: {
@@ -80,6 +59,11 @@ const props = defineProps({
 
 defineEmits(['select'])
 
+marked.setOptions({
+  breaks: true,
+  gfm: true,
+})
+
 const tier = computed(() => props.tierMeta[props.doc.tier])
 const relatedDocs = computed(() =>
   props.doc.related
@@ -87,14 +71,14 @@ const relatedDocs = computed(() =>
     .filter(Boolean),
 )
 
-const examples = computed(() => docExamples[props.doc.id] || [])
+const renderedMarkdown = computed(() => marked.parse(props.doc.content))
 </script>
 
 <style scoped>
 .doc-view {
   display: flex;
   flex-direction: column;
-  gap: 1.15rem;
+  gap: 1rem;
 }
 
 .doc-header {
@@ -107,27 +91,30 @@ const examples = computed(() => docExamples[props.doc.id] || [])
 
 .tier-pill,
 .status-pill {
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 999px;
   padding: 0.35rem 0.75rem;
-  font-size: 0.76rem;
+  font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+  background: rgba(255, 255, 255, 0.025);
 }
 
 .status-pill {
-  color: rgba(226, 232, 244, 0.66);
+  color: rgba(226, 232, 244, 0.58);
 }
 
 .doc-title-block h2 {
-  margin: 0 0 0.45rem;
+  margin: 0 0 0.4rem;
+  font-size: clamp(1.8rem, 2.5vw, 2.4rem);
+  line-height: 0.98;
 }
 
 .doc-title-block p,
-.doc-section p {
+.doc-section > p {
   margin: 0;
-  color: rgba(222, 229, 240, 0.8);
+  color: rgba(222, 229, 240, 0.74);
   line-height: 1.6;
 }
 
@@ -135,24 +122,16 @@ const examples = computed(() => docExamples[props.doc.id] || [])
   display: flex;
   flex-direction: column;
   gap: 0.7rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid rgba(173, 188, 214, 0.08);
 }
 
 .doc-section h3 {
   margin: 0;
   color: #f5f7fb;
-  font-size: 0.96rem;
-  letter-spacing: 0.05em;
+  font-size: 0.84rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-}
-
-.highlight-list {
-  margin: 0;
-  padding-left: 1.15rem;
-  color: rgba(240, 244, 250, 0.92);
-}
-
-.highlight-list li + li {
-  margin-top: 0.45rem;
 }
 
 .related-grid {
@@ -162,37 +141,112 @@ const examples = computed(() => docExamples[props.doc.id] || [])
 }
 
 .related-chip {
-  border: 1px solid rgba(173, 188, 214, 0.16);
+  border: 1px solid rgba(173, 188, 214, 0.12);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.025);
   color: #f1f4fb;
   padding: 0.45rem 0.75rem;
   cursor: pointer;
 }
 
-.raw-content {
-  border-top: 1px solid rgba(173, 188, 214, 0.12);
-  padding-top: 1rem;
-  border-radius: 16px;
+.related-chip:hover {
+  border-color: rgba(241, 212, 170, 0.32);
+  color: #fff2d7;
 }
 
-.raw-content summary {
-  cursor: pointer;
-  color: #f2c14e;
-  font-weight: 700;
+.markdown-body {
+  color: rgba(235, 240, 248, 0.9);
+  line-height: 1.7;
 }
 
-.raw-content pre {
-  margin: 0.9rem 0 0;
-  padding: 1rem 1.1rem;
-  border-radius: 14px;
-  border: 1px solid rgba(173, 188, 214, 0.14);
-  background: rgba(5, 8, 14, 0.92);
-  white-space: pre-wrap;
-  word-break: break-word;
-  font-size: 0.84rem;
-  line-height: 1.55;
-  color: rgba(235, 240, 248, 0.92);
+.markdown-body :deep(h1),
+.markdown-body :deep(h2),
+.markdown-body :deep(h3),
+.markdown-body :deep(h4) {
+  margin: 1.25rem 0 0.65rem;
+  line-height: 1.1;
+  color: #fbfcff;
+}
+
+.markdown-body :deep(h1) {
+  font-size: 2rem;
+}
+
+.markdown-body :deep(h2) {
+  font-size: 1.4rem;
+}
+
+.markdown-body :deep(h3) {
+  font-size: 1.1rem;
+}
+
+.markdown-body :deep(p),
+.markdown-body :deep(ul),
+.markdown-body :deep(ol),
+.markdown-body :deep(pre),
+.markdown-body :deep(table),
+.markdown-body :deep(blockquote) {
+  margin: 0.8rem 0;
+}
+
+.markdown-body :deep(ul),
+.markdown-body :deep(ol) {
+  padding-left: 1.3rem;
+}
+
+.markdown-body :deep(li + li) {
+  margin-top: 0.35rem;
+}
+
+.markdown-body :deep(a) {
+  color: #f1d4aa;
+}
+
+.markdown-body :deep(code) {
+  border-radius: 0.4rem;
+  padding: 0.15rem 0.4rem;
+  background: rgba(255, 255, 255, 0.07);
+  color: #f7dfb8;
+}
+
+.markdown-body :deep(pre) {
   overflow-x: auto;
+  padding: 1rem;
+  border-radius: 16px;
+  border: 1px solid rgba(173, 188, 214, 0.12);
+  background: rgba(5, 8, 14, 0.88);
+}
+
+.markdown-body :deep(pre code) {
+  padding: 0;
+  background: transparent;
+}
+
+.markdown-body :deep(blockquote) {
+  padding: 0.9rem 1rem;
+  border-left: 3px solid rgba(241, 212, 170, 0.45);
+  background: rgba(255, 255, 255, 0.025);
+  color: rgba(226, 232, 244, 0.8);
+}
+
+.markdown-body :deep(table) {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  display: block;
+  overflow-x: auto;
+}
+
+.markdown-body :deep(th),
+.markdown-body :deep(td) {
+  border: 1px solid rgba(173, 188, 214, 0.12);
+  padding: 0.7rem 0.85rem;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.markdown-body :deep(th) {
+  color: #fbfcff;
+  background: rgba(255, 255, 255, 0.04);
 }
 </style>

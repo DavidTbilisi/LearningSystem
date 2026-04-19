@@ -1,87 +1,106 @@
 <template>
   <div class="matrix-demo">
-    <h3>4-Bit Hex Matrix (Element × State)</h3>
-    <table class="matrix-table">
-      <thead>
-        <tr>
-          <th>Element \ State</th>
-          <th>Solid<br>00</th>
-          <th>Liquid<br>01</th>
-          <th>Gas<br>10</th>
-          <th>Plasma<br>11</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(row, i) in matrix" :key="i">
-          <th>{{ row.element }}</th>
-          <td v-for="cell in row.states" :key="cell.hex" @click="selectHex(cell.hex)" :class="{selected: cell.hex === selectedHex}">
-            <div class="hex">{{ cell.hex }}</div>
-            <div class="emoji">{{ cell.emoji }}</div>
-            <div class="scene">{{ cell.scene }}</div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="matrix-head">
+      <div>
+        <p class="matrix-kicker">4-bit matrix</p>
+        <h3>Element x state</h3>
+      </div>
+      <p class="matrix-copy">
+        Each hex value is one elemental scene. Tap a cell to inspect its mnemonic role.
+      </p>
+    </div>
+
+    <div class="matrix-grid" role="table" aria-label="4-bit hex matrix">
+      <div class="grid-corner">Element / State</div>
+      <div
+        v-for="state in states"
+        :key="state.bits"
+        class="grid-head"
+      >
+        <strong>{{ state.label }}</strong>
+        <span>{{ state.bits }}</span>
+      </div>
+
+      <template v-for="row in matrix" :key="row.element">
+        <div class="grid-row-label">{{ row.element }}</div>
+        <button
+          v-for="cell in row.states"
+          :key="cell.hex"
+          :class="['grid-cell', { selected: cell.hex === selectedHex }]"
+          @click="selectHex(cell.hex)"
+        >
+          <span class="hex">{{ cell.hex }}</span>
+          <span class="scene">{{ cell.scene }}</span>
+        </button>
+      </template>
+    </div>
+
     <div v-if="selectedCell" class="matrix-details">
-      <h4>Selected: Hex {{ selectedCell.hex }}</h4>
-      <p><b>Element:</b> {{ selectedCell.element }}<br>
-         <b>State:</b> {{ selectedCell.state }}<br>
-         <b>Scene:</b> {{ selectedCell.scene }} {{ selectedCell.emoji }}</p>
+      <p class="matrix-kicker">Selected value</p>
+      <h4>Hex {{ selectedCell.hex }}</h4>
+      <p>
+        <strong>{{ selectedCell.element }}</strong> in a
+        <strong>{{ selectedCell.state }}</strong> state becomes
+        <strong>{{ selectedCell.scene }}</strong>.
+      </p>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { computed, ref } from 'vue'
+
+const states = [
+  { label: 'Solid', bits: '00' },
+  { label: 'Liquid', bits: '01' },
+  { label: 'Gas', bits: '10' },
+  { label: 'Plasma', bits: '11' },
+]
 
 const matrix = [
   {
     element: 'Earth',
     states: [
-      { hex: '0', emoji: '🪨', scene: 'Rock wall', element: 'Earth', state: 'Solid' },
-      { hex: '1', emoji: '🟫', scene: 'Mud pit', element: 'Earth', state: 'Liquid' },
-      { hex: '2', emoji: '🌫️', scene: 'Dust cloud', element: 'Earth', state: 'Gas' },
-      { hex: '3', emoji: '🌋', scene: 'Magma flow', element: 'Earth', state: 'Plasma' },
-    ]
+      { hex: '0', scene: 'Rock wall', element: 'Earth', state: 'Solid' },
+      { hex: '1', scene: 'Mud pit', element: 'Earth', state: 'Liquid' },
+      { hex: '2', scene: 'Dust cloud', element: 'Earth', state: 'Gas' },
+      { hex: '3', scene: 'Magma flow', element: 'Earth', state: 'Plasma' },
+    ],
   },
   {
     element: 'Water',
     states: [
-      { hex: '4', emoji: '🧊', scene: 'Ice block', element: 'Water', state: 'Solid' },
-      { hex: '5', emoji: '🌊', scene: 'Ocean wave', element: 'Water', state: 'Liquid' },
-      { hex: '6', emoji: '💨', scene: 'Mist veil', element: 'Water', state: 'Gas' },
-      { hex: '7', emoji: '⛈️', scene: 'Lightning storm', element: 'Water', state: 'Plasma' },
-    ]
+      { hex: '4', scene: 'Ice block', element: 'Water', state: 'Solid' },
+      { hex: '5', scene: 'Ocean wave', element: 'Water', state: 'Liquid' },
+      { hex: '6', scene: 'Mist veil', element: 'Water', state: 'Gas' },
+      { hex: '7', scene: 'Lightning storm', element: 'Water', state: 'Plasma' },
+    ],
   },
   {
     element: 'Air',
     states: [
-      { hex: '8', emoji: '💎', scene: 'Crystal', element: 'Air', state: 'Solid' },
-      { hex: '9', emoji: '💧', scene: 'Dew drop', element: 'Air', state: 'Liquid' },
-      { hex: 'A', emoji: '🌬️', scene: 'Breeze', element: 'Air', state: 'Gas' },
-      { hex: 'B', emoji: '🌌', scene: 'Aurora', element: 'Air', state: 'Plasma' },
-    ]
+      { hex: '8', scene: 'Crystal', element: 'Air', state: 'Solid' },
+      { hex: '9', scene: 'Dew drop', element: 'Air', state: 'Liquid' },
+      { hex: 'A', scene: 'Breeze', element: 'Air', state: 'Gas' },
+      { hex: 'B', scene: 'Aurora', element: 'Air', state: 'Plasma' },
+    ],
   },
   {
     element: 'Fire',
     states: [
-      { hex: 'C', emoji: '🧱', scene: 'Ember', element: 'Fire', state: 'Solid' },
-      { hex: 'D', emoji: '🌋', scene: 'Lava flow', element: 'Fire', state: 'Liquid' },
-      { hex: 'E', emoji: '💨', scene: 'Smoke column', element: 'Fire', state: 'Gas' },
-      { hex: 'F', emoji: '🔥', scene: 'Inferno wall', element: 'Fire', state: 'Plasma' },
-    ]
-  }
+      { hex: 'C', scene: 'Ember', element: 'Fire', state: 'Solid' },
+      { hex: 'D', scene: 'Lava flow', element: 'Fire', state: 'Liquid' },
+      { hex: 'E', scene: 'Smoke column', element: 'Fire', state: 'Gas' },
+      { hex: 'F', scene: 'Inferno wall', element: 'Fire', state: 'Plasma' },
+    ],
+  },
 ]
 
-const selectedHex = ref(null)
-const selectedCell = computed(() => {
-  for (const row of matrix) {
-    for (const cell of row.states) {
-      if (cell.hex === selectedHex.value) return cell
-    }
-  }
-  return null
-})
+const selectedHex = ref('5')
+const selectedCell = computed(() =>
+  matrix.flatMap((row) => row.states).find((cell) => cell.hex === selectedHex.value),
+)
+
 function selectHex(hex) {
   selectedHex.value = hex
 }
@@ -89,41 +108,127 @@ function selectHex(hex) {
 
 <style scoped>
 .matrix-demo {
-  margin: 2rem 0;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
-.matrix-table {
-  margin: 0 auto;
-  border-collapse: collapse;
-  background: #fff;
+
+.matrix-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: end;
+  flex-wrap: wrap;
 }
-.matrix-table th, .matrix-table td {
-  border: 1px solid #ccc;
-  padding: 0.5rem 1rem;
-  min-width: 80px;
-  text-align: center;
+
+.matrix-kicker {
+  margin: 0 0 0.35rem;
+  color: rgba(160, 179, 214, 0.78);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
-.matrix-table th {
-  background: #f0f0f0;
+
+.matrix-head h3,
+.matrix-details h4 {
+  margin: 0;
 }
+
+.matrix-copy,
+.matrix-details p {
+  margin: 0;
+  color: rgba(226, 232, 244, 0.74);
+  line-height: 1.55;
+}
+
+.matrix-grid {
+  display: grid;
+  grid-template-columns: 130px repeat(4, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.grid-corner,
+.grid-head,
+.grid-row-label,
+.grid-cell {
+  padding: 0.9rem 0.8rem;
+  border-radius: 18px;
+  border: 1px solid rgba(173, 188, 214, 0.08);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.grid-corner,
+.grid-head,
+.grid-row-label {
+  color: rgba(220, 229, 241, 0.78);
+  font-size: 0.82rem;
+}
+
+.grid-head,
+.grid-row-label {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.12rem;
+}
+
+.grid-head span {
+  color: rgba(160, 179, 214, 0.72);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.grid-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.28rem;
+  color: #eff3fa;
+  text-align: left;
+  cursor: pointer;
+}
+
+.grid-cell:hover,
+.grid-cell.selected {
+  border-color: rgba(241, 212, 170, 0.26);
+  background: rgba(241, 212, 170, 0.08);
+}
+
 .hex {
-  font-weight: bold;
-  font-size: 1.2em;
+  font-family: 'Iowan Old Style', 'Palatino Linotype', serif;
+  font-size: 1.45rem;
+  color: #f1d4aa;
 }
-.emoji {
-  font-size: 1.5em;
+
+.scene {
+  line-height: 1.35;
 }
-.selected {
-  background: #e0f7fa;
-  border: 2px solid #42b983;
-}
+
 .matrix-details {
-  margin-top: 1.5rem;
-  font-size: 1.1em;
-  background: #f6f8fa;
-  display: inline-block;
-  padding: 1rem 2rem;
-  border-radius: 8px;
-  border: 1px solid #42b983;
+  padding: 1rem;
+  border-radius: 22px;
+  border: 1px solid rgba(241, 212, 170, 0.14);
+  background: rgba(241, 212, 170, 0.05);
+}
+
+@media (max-width: 780px) {
+  .matrix-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .grid-corner {
+    grid-column: 1 / -1;
+  }
+
+  .grid-head {
+    min-height: 76px;
+  }
+
+  .grid-row-label {
+    grid-column: 1 / -1;
+    margin-top: 0.4rem;
+  }
 }
 </style>

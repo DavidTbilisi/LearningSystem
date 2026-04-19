@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "cytoscape": "^3.33.2",
-    "vue": "^3.5.32"
+    "marked": "^15.0.7",
+    "vue": "^3.5.32",
+    "vue-router": "^4.5.1"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.5",

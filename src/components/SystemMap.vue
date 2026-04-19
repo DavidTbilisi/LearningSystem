@@ -259,21 +259,34 @@ watch(
 }
 
 .cytoscape-container {
-  min-height: 980px;
-  border-radius: 26px;
-  border: 1px solid rgba(173, 188, 214, 0.18);
+  min-height: 860px;
+  border-radius: 28px;
+  border: 1px solid rgba(173, 188, 214, 0.14);
   background:
-    radial-gradient(circle at top, rgba(245, 184, 102, 0.12), transparent 28%),
-    linear-gradient(180deg, rgba(16, 22, 37, 0.98), rgba(7, 10, 17, 0.98));
+    radial-gradient(circle at top, rgba(245, 184, 102, 0.1), transparent 24%),
+    linear-gradient(180deg, rgba(14, 20, 34, 0.98), rgba(6, 9, 15, 0.98));
 }
 
 .map-legend {
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
-  color: rgba(226, 232, 244, 0.72);
-  font-size: 0.8rem;
-  letter-spacing: 0.04em;
+  color: rgba(226, 232, 244, 0.62);
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+@media (max-width: 1120px) {
+  .cytoscape-container {
+    min-height: 720px;
+  }
+}
+
+@media (max-width: 780px) {
+  .cytoscape-container {
+    min-height: 560px;
+    border-radius: 22px;
+  }
 }
 </style>

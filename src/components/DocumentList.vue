@@ -96,7 +96,7 @@ const groupedDocs = computed(() =>
 .doc-list {
   display: flex;
   flex-direction: column;
-  gap: 1.1rem;
+  gap: 1rem;
 }
 
 .list-header h2,
@@ -106,28 +106,26 @@ const groupedDocs = computed(() =>
 
 .list-kicker {
   margin: 0 0 0.35rem;
-  color: rgba(124, 146, 187, 0.82);
-  font-size: 0.78rem;
+  color: rgba(150, 171, 208, 0.82);
+  font-size: 0.74rem;
   font-weight: 700;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
 }
 
 .list-copy,
 .tier-head p {
   margin: 0.2rem 0 0;
-  color: rgba(210, 218, 232, 0.68);
+  color: rgba(210, 218, 232, 0.62);
   line-height: 1.45;
 }
 
 .tier-group {
   display: flex;
   flex-direction: column;
-  gap: 0.55rem;
-  padding: 1rem;
-  border-radius: 18px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.01));
-  border: 1px solid rgba(173, 188, 214, 0.08);
+  gap: 0.45rem;
+  padding: 0.95rem 0 0;
+  border-top: 1px solid rgba(173, 188, 214, 0.1);
 }
 
 .tier-head {
@@ -137,28 +135,28 @@ const groupedDocs = computed(() =>
 }
 
 .tier-dot {
-  width: 0.7rem;
-  height: 0.7rem;
+  width: 0.6rem;
+  height: 0.6rem;
   border-radius: 999px;
-  margin-top: 0.55rem;
-  box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.04);
+  margin-top: 0.45rem;
+  box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.03);
 }
 
 .priority-panel {
-  padding: 1rem;
-  border-radius: 18px;
-  border: 1px solid rgba(242, 193, 78, 0.14);
+  padding: 1rem 1rem 1.05rem;
+  border-radius: 22px;
+  border: 1px solid rgba(241, 212, 170, 0.14);
   background:
-    radial-gradient(circle at top right, rgba(242, 193, 78, 0.14), transparent 38%),
-    rgba(255, 255, 255, 0.03);
+    radial-gradient(circle at top right, rgba(241, 212, 170, 0.12), transparent 38%),
+    rgba(255, 255, 255, 0.025);
 }
 
 .priority-kicker {
   margin: 0 0 0.7rem;
-  color: #ffe7a1;
-  font-size: 0.76rem;
+  color: #f1d4aa;
+  font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
 }
 
@@ -172,16 +170,16 @@ const groupedDocs = computed(() =>
   display: flex;
   flex-direction: column;
   gap: 0.22rem;
-  padding: 0.85rem 0.95rem;
-  border-radius: 16px;
+  padding: 0.85rem 0.95rem 0.9rem;
+  border-radius: 18px;
   border: 1px solid color-mix(in srgb, var(--tier-color) 32%, transparent);
-  background: rgba(5, 8, 14, 0.5);
+  background: rgba(255, 255, 255, 0.025);
 }
 
 .priority-label {
   margin: 0;
   color: var(--tier-color);
-  font-size: 0.82rem;
+  font-size: 0.76rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -201,28 +199,28 @@ const groupedDocs = computed(() =>
   justify-content: space-between;
   gap: 0.8rem;
   width: 100%;
-  border: 1px solid rgba(173, 188, 214, 0.12);
-  border-radius: 14px;
+  border: 0;
+  border-left: 2px solid transparent;
   background: rgba(255, 255, 255, 0.02);
   color: #f1f4fb;
-  padding: 0.8rem 0.9rem;
+  padding: 0.8rem 0.3rem 0.8rem 0.9rem;
   text-align: left;
   cursor: pointer;
   transition:
     transform 140ms ease,
-    border-color 140ms ease,
+    border-left-color 140ms ease,
     background 140ms ease;
 }
 
 .doc-row:hover {
-  transform: translateY(-1px);
-  border-color: rgba(173, 188, 214, 0.24);
+  transform: translateX(2px);
+  border-left-color: rgba(173, 188, 214, 0.24);
   background: rgba(255, 255, 255, 0.04);
 }
 
 .doc-row.active {
-  background: linear-gradient(135deg, rgba(242, 193, 78, 0.14), rgba(255, 255, 255, 0.04));
-  border-color: rgba(242, 193, 78, 0.4);
+  background: linear-gradient(90deg, rgba(241, 212, 170, 0.12), rgba(255, 255, 255, 0.02));
+  border-left-color: rgba(241, 212, 170, 0.76);
 }
 
 .doc-main {
@@ -237,15 +235,15 @@ const groupedDocs = computed(() =>
 }
 
 .doc-summary {
-  color: rgba(214, 222, 235, 0.66);
-  font-size: 0.82rem;
+  color: rgba(214, 222, 235, 0.6);
+  font-size: 0.8rem;
   line-height: 1.35;
 }
 
 .doc-status {
-  color: rgba(210, 218, 232, 0.58);
-  font-size: 0.76rem;
-  letter-spacing: 0.08em;
+  color: rgba(210, 218, 232, 0.48);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   flex-shrink: 0;
 }
