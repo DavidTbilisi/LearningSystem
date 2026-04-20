@@ -238,6 +238,11 @@ const groupedDocs = computed(() =>
   color: rgba(214, 222, 235, 0.6);
   font-size: 0.8rem;
   line-height: 1.35;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
 }
 
 .doc-status {

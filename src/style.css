@@ -54,7 +54,7 @@ code {
   position: sticky;
   top: 0;
   z-index: 20;
-  width: min(1760px, calc(100% - 32px));
+  width: min(1380px, calc(100% - 28px));
   margin: 0 auto;
   padding: 0.9rem 0;
   display: flex;
@@ -134,15 +134,15 @@ code {
 }
 
 .page-shell {
-  width: min(1760px, calc(100% - 32px));
+  width: min(1380px, calc(100% - 28px));
   margin: 0 auto;
   padding: 0.4rem 0 2rem;
 }
 
 .hero {
   display: grid;
-  grid-template-columns: minmax(0, 1.3fr) minmax(320px, 0.92fr);
-  gap: 1.35rem;
+  grid-template-columns: minmax(0, 1.08fr) minmax(260px, 0.92fr);
+  gap: 1rem;
   align-items: stretch;
   margin-bottom: 1.2rem;
   animation: rise-in 520ms ease;
@@ -161,8 +161,8 @@ code {
 
 .hero-brand {
   border-radius: 34px;
-  padding: 2rem;
-  min-height: 420px;
+  padding: 1.5rem 1.75rem;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -363,7 +363,7 @@ code {
 
 .visual-controls {
   display: grid;
-  grid-template-columns: 280px minmax(0, 1fr);
+  grid-template-columns: minmax(200px, 0.88fr) minmax(0, 2.1fr);
   gap: 1rem;
   margin-bottom: 1.2rem;
   animation: rise-in 680ms ease;
@@ -449,22 +449,25 @@ code {
 
 .workspace {
   display: grid;
-  grid-template-columns: 300px minmax(0, 1fr) 360px;
-  gap: 1.15rem;
+  grid-template-columns: minmax(200px, 0.7fr) minmax(320px, 1.55fr) minmax(220px, 0.75fr);
+  gap: 1rem;
   align-items: start;
+  max-width: 100%;
 }
 
 .catalog-panel,
 .map-panel,
 .inspector-panel {
   border-radius: 28px;
-  padding: 1.2rem;
+  padding: 1rem;
   animation: rise-in 760ms ease;
+  min-width: 0;
 }
 
 .catalog-panel {
   position: sticky;
   top: 1rem;
+  align-self: start;
 }
 
 .map-panel {
@@ -474,7 +477,7 @@ code {
 
 .stage-header {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 220px;
+  grid-template-columns: minmax(0, 1fr) minmax(160px, 0.32fr);
   gap: 1rem;
   padding-bottom: 1rem;
   margin-bottom: 1rem;
@@ -526,7 +529,7 @@ code {
 }
 
 .panel-note {
-  max-width: 30ch;
+  max-width: 36ch;
   margin: 0;
   color: rgba(221, 228, 240, 0.68);
   line-height: 1.5;
@@ -536,6 +539,26 @@ code {
 .inspector-panel {
   position: sticky;
   top: 1rem;
+  align-self: start;
+}
+
+/* Home atlas: keep side rails readable — scroll inside panel instead of endless column */
+.catalog-panel .doc-list,
+.inspector-panel .doc-view {
+  max-height: min(72vh, 880px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 0.15rem;
+  scrollbar-gutter: stable;
+}
+
+.inspector-panel .markdown-body {
+  font-size: 0.92rem;
+  line-height: 1.62;
+}
+
+.inspector-panel .doc-title-block h2 {
+  font-size: clamp(1.35rem, 2.2vw, 1.85rem);
 }
 
 .document-page-shell {
@@ -694,18 +717,26 @@ code {
   }
 
   .workspace {
-    grid-template-columns: 280px minmax(0, 1fr);
+    grid-template-columns: minmax(220px, 0.42fr) minmax(0, 1fr);
   }
 
   .inspector-panel {
     grid-column: 1 / -1;
     position: static;
+    max-width: 44rem;
+    width: 100%;
+    margin-inline: auto;
+  }
+
+  .catalog-panel .doc-list,
+  .inspector-panel .doc-view {
+    max-height: none;
   }
 }
 
 @media (max-width: 1120px) {
   .site-header {
-    width: min(100% - 24px, 1600px);
+    width: min(100% - 24px, 1380px);
     flex-wrap: wrap;
     justify-content: flex-start;
   }
@@ -715,7 +746,7 @@ code {
   }
 
   .page-shell {
-    width: min(100% - 24px, 1600px);
+    width: min(100% - 24px, 1380px);
     padding-top: 1rem;
   }
 
