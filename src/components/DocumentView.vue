@@ -41,6 +41,7 @@
 <script setup>
 import { computed } from 'vue'
 import { marked } from 'marked'
+import { docHeadingAnchorId } from '../utils/markdownPlain'
 
 const props = defineProps({
   doc: {
@@ -62,6 +63,16 @@ defineEmits(['select'])
 marked.setOptions({
   breaks: true,
   gfm: true,
+})
+
+marked.use({
+  renderer: {
+    heading({ tokens, depth, text }) {
+      const id = docHeadingAnchorId(text)
+      const inner = this.parser.parseInline(tokens)
+      return `<h${depth} id="${id}">${inner}</h${depth}>\n`
+    },
+  },
 })
 
 const tier = computed(() => props.tierMeta[props.doc.tier])

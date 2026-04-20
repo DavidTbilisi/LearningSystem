@@ -285,6 +285,68 @@ READING ORDER: WHO / HOW / WHAT / WHEN
 
 ---
 
+## Representation atlas — every surface in this app
+
+CAST is intentionally mirrored across modalities so you can choose the channel that matches how you think day-to-day.
+The markdown body is the canonical prose specification with tables, worked domains, and quick reference cards.
+The atlas map places this file on the concept tier so you can see which neighbors to open next — binary-hex for the shared
+bit vocabulary, georgian-system for node identity, retrieval-protocol for how decks consume edges, and collisions for
+disambiguation rules. The weight spectrum treats the document as a signal about how central relational encoding is to
+your current study session. On the document route, the orbit widget renders related files as a small graph so you can
+jump outward without losing the CAST frame. Finally, the learning studio compresses the same story into a walkthrough
+that follows headings, guided examples that rehearse forward and backward prompts, and a playground that adds live
+composition plus decode drills. Use every representation once during onboarding, then lean on the two that stick.
+
+---
+
+## Matrix view — CAST as a specialized 8-bit grid
+
+Treat the four two-bit pairs as the rows of a mental matrix: Character versus Action versus Stream versus Time.
+Each row has exactly four legal states, which keeps combinatorics bounded while still expressive enough for real software
+graphs, proof nets, and causal histories. When you are unsure which row is wrong during recall, compare against the
+generic elemental matrix in binary-hex.md — the bits are the same even when the labels change. CAST simply renames the
+axes so the first pair always answers who the source behaves as, the second pair names the relationship verb family,
+the third names what substance moves, and the fourth names how durable the dependency feels. Matrix thinking helps when
+you are debugging a stuck edge: rotate through the four rows and ask which answer feels false compared to the codebase.
+
+---
+
+## List representation — CAST decision checklist
+
+Work the edge through this ordered list before you freeze a palace location: (1) Confirm the endpoints already have
+Georgian node scenes so the hop is anchored. (2) Decide whether the source acts as hub, peer, helper, or reactor for
+this specific hop — that pins Character. (3) Classify the interaction as control, feed, influence, or rupture — that
+pins Action strength. (4) Name whether structure, resources, signals, or discrete events move — that pins Stream. (5)
+State permanence, active maintenance, conditionality, or volatility — that pins Time. (6) Speak the full scene aloud in
+WHO then HOW then WHAT then WHEN order to catch awkward grammar early. (7) Write the eight bits on the Anki back beside
+a one-line natural language gloss. Lists complement tables because they give you a repeatable audit path under stress.
+
+---
+
+## Diagram vocabulary — spatial graph mnemonics
+
+Even without drawing on paper, you should be able to narrate a diagram: hubs occupy architectural centers, satellites
+ring them, bottlenecks become narrow chokepoints, and bidirectional edges borrow symmetrical props such as bridges with
+two-way lanterns. CAST bytes decorate each connector object in that diagram — a door, cable, river, or contract scroll —
+so the visual metaphor stays consistent with the bitstring. When you promote an edge from temporary sketch to long-term
+memory, upgrade the prop fidelity instead of inventing a second scene. Spatial vocabulary also explains why CAST pairs
+naturally with measurement frameworks that track graph size and retrieval decay: if the palace no longer matches the
+topology, the bytes will not retrieve cleanly either.
+
+---
+
+## Narrative arc — story-first encoding order
+
+Some learners prefer to start from a plot beat and only then derive bits. Tell the relationship as a micro-story with a
+named protagonist drawn from the Character roster, give them an Action verb that matches emotional torque, let Stream
+supply the prop they manipulate, and let Time set the weather or lighting that signals stability. Once the story feels
+honest, peel off the four pairs in reading order and confirm the byte matches what you would have chosen analytically.
+Narrative-first encoding is slower at first but reduces collisions when two different edges want similar verbs because
+the plot beat forces disambiguation. The learning studio playground exists to rapid-fire this arc without opening the
+full document.
+
+---
+
 ## Key Principles
 
 1. **Nodes before edges.** Classify and encode nodes first, then draw edges between them.

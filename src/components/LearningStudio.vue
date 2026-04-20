@@ -1,5 +1,11 @@
 <template>
-  <div class="learning-studio">
+  <div
+    class="learning-studio"
+    tabindex="0"
+    role="region"
+    aria-label="Learning studio"
+    @keydown="onStudioKeydown"
+  >
     <div class="studio-head">
       <div>
         <p class="studio-kicker">Learning studio</p>
@@ -10,6 +16,8 @@
         <button
           v-for="tab in tabs"
           :key="tab.id"
+          type="button"
+          :data-testid="`studio-tab-${tab.id}`"
           :class="{ active: activeTab === tab.id }"
           @click="activeTab = tab.id"
         >
@@ -22,31 +30,66 @@
       <div class="panel-head">
         <div>
           <p class="studio-kicker">Walkthrough</p>
-          <h4>{{ walkthroughSteps[currentStepIndex].label }}</h4>
+          <h4 :id="`studio-wt-title-${currentStepIndex}`">{{ walkthroughSteps[currentStepIndex].label }}</h4>
         </div>
         <span class="step-index">
           Step {{ currentStepIndex + 1 }} / {{ walkthroughSteps.length }}
         </span>
       </div>
 
+      <div class="walkthrough-tools">
+        <label class="auto-advance">
+          <input v-model="autoAdvance" type="checkbox" />
+          <span>Auto-advance (9s)</span>
+        </label>
+        <button
+          v-if="walkthroughSteps[currentStepIndex].anchorId"
+          type="button"
+          class="anchor-jump"
+          @click="scrollToDocHeading(walkthroughSteps[currentStepIndex].anchorId)"
+        >
+          Go to section in document
+        </button>
+      </div>
+
       <label class="step-slider">
         <span>Progress</span>
         <input
-          v-model="currentStepIndex"
           type="range"
           :min="0"
           :max="walkthroughSteps.length - 1"
           step="1"
+          :value="currentStepIndex"
+          @input="onStepRangeInput($event)"
         />
       </label>
 
-      <div class="walkthrough-card">
-        <p>{{ walkthroughSteps[currentStepIndex].body }}</p>
+      <div class="step-dots" role="group" aria-label="Walkthrough steps">
+        <button
+          v-for="(step, index) in walkthroughSteps"
+          :key="`${step.label}-${index}`"
+          type="button"
+          :aria-current="index === currentStepIndex ? 'step' : undefined"
+          :class="['step-dot', { active: index === currentStepIndex }]"
+          :title="step.label"
+          @click="currentStepIndex = index"
+        >
+          <span class="visually-hidden">{{ step.label }}</span>
+        </button>
+      </div>
+
+      <p id="walkthrough-keys-hint" class="keys-hint">
+        Tip: with this panel focused, use ← → or Home / End to move between steps.
+      </p>
+
+      <div class="walkthrough-card" :aria-labelledby="`studio-wt-title-${currentStepIndex}`">
+        <p aria-live="polite">{{ walkthroughSteps[currentStepIndex].body }}</p>
       </div>
 
       <div class="walkthrough-nav">
-        <button @click="prevStep" :disabled="currentStepIndex === 0">Previous</button>
+        <button type="button" @click="prevStep" :disabled="currentStepIndex === 0">Previous</button>
         <button
+          type="button"
           class="primary"
           @click="nextStep"
           :disabled="currentStepIndex === walkthroughSteps.length - 1"
@@ -73,20 +116,34 @@
           <h4>Explain or recall</h4>
         </div>
         <div class="playground-mode">
-          <button :class="{ active: playgroundMode === 'explain' }" @click="playgroundMode = 'explain'">
+          <button type="button" :class="{ active: playgroundMode === 'explain' }" @click="playgroundMode = 'explain'">
             Explain
           </button>
-          <button :class="{ active: playgroundMode === 'recall' }" @click="playgroundMode = 'recall'">
+          <button type="button" :class="{ active: playgroundMode === 'recall' }" @click="playgroundMode = 'recall'">
             Recall
           </button>
         </div>
       </div>
 
+      <label class="step-slider">
+        <span>Progress</span>
+        <input
+          type="range"
+          :min="0"
+          :max="walkthroughSteps.length - 1"
+          step="1"
+          :value="currentStepIndex"
+          @input="onStepRangeInput($event)"
+        />
+      </label>
+
       <div class="playground-grid">
         <button
           v-for="(step, index) in walkthroughSteps"
           :key="step.label"
+          type="button"
           :class="['playground-node', { active: index === currentStepIndex }]"
+          :aria-current="index === currentStepIndex ? 'step' : undefined"
           @click="currentStepIndex = index"
         >
           <span class="playground-count">{{ index + 1 }}</span>
@@ -98,7 +155,7 @@
         <p class="playground-label">
           {{ playgroundMode === 'explain' ? 'Explain this part' : 'Try to recall this part' }}
         </p>
-        <p class="playground-text">
+        <p class="playground-text" aria-live="polite">
           {{
             playgroundMode === 'explain'
               ? walkthroughSteps[currentStepIndex].body
@@ -107,9 +164,13 @@
         </p>
       </div>
 
-      <div v-if="doc.id === 'binary-hex'" class="studio-visuals">
+      <div v-if="doc.id === 'binary-hex'" class="studio-visuals" data-testid="binary-hex-studio-visuals">
         <BinaryHexMatrix />
         <BinaryHexByteVisualizer />
+      </div>
+
+      <div v-if="doc.id === 'cast-system'" class="studio-visuals">
+        <CastStudioVisuals />
       </div>
     </section>
 
@@ -123,11 +184,13 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import BinaryHexByteVisualizer from './BinaryHexByteVisualizer.vue'
 import BinaryHexMatrix from './BinaryHexMatrix.vue'
+import CastStudioVisuals from './CastStudioVisuals.vue'
 import ExampleStepper from './ExampleStepper.vue'
 import { docExamples } from '../data/exampleData'
+import { cleanStudioText, docHeadingAnchorId } from '../utils/markdownPlain'
 
 const props = defineProps({
   doc: {
@@ -146,26 +209,15 @@ const tabs = [
 const activeTab = ref('walkthrough')
 const currentStepIndex = ref(0)
 const playgroundMode = ref('explain')
+const autoAdvance = ref(false)
 
-function cleanStudioText(text) {
-  return text
-    .replace(/^\s*#{1,6}\s+/gm, '')
-    .replace(/^\s*[-*+]\s+/gm, '')
-    .replace(/^\s*\d+\.\s+/gm, '')
-    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
-    .replace(/`([^`]+)`/g, '$1')
-    .replace(/\*\*([^*]+)\*\*/g, '$1')
-    .replace(/\*([^*]+)\*/g, '$1')
-    .replace(/_{1,2}([^_]+)_{1,2}/g, '$1')
-    .replace(/\|/g, ' ')
-    .replace(/&nbsp;/g, ' ')
-    .replace(/Â·/g, '·')
-    .replace(/â†’/g, '->')
-    .replace(/â‰¤/g, '<=')
-    .replace(/â‰¥/g, '>=')
-    .replace(/â€”|â€“/g, '-')
-    .replace(/\s+/g, ' ')
-    .trim()
+let autoAdvanceTimer = null
+
+function clearAutoAdvance() {
+  if (autoAdvanceTimer != null) {
+    clearInterval(autoAdvanceTimer)
+    autoAdvanceTimer = null
+  }
 }
 
 function extractSections(content) {
@@ -192,6 +244,7 @@ function extractSections(content) {
       sections.push({
         label: cleanStudioText(match[1].trim()),
         body: cleanedBody,
+        anchorId: docHeadingAnchorId(match[1].trim()),
       })
     }
   })
@@ -200,12 +253,13 @@ function extractSections(content) {
 }
 
 const walkthroughSteps = computed(() => {
-  const sections = extractSections(props.doc.content).slice(0, 7)
+  const sections = extractSections(props.doc.content).slice(0, 12)
   if (sections.length) return sections
 
   return props.doc.highlights.map((item, index) => ({
     label: `Core move ${index + 1}`,
     body: cleanStudioText(item),
+    anchorId: null,
   }))
 })
 
@@ -246,14 +300,90 @@ function nextStep() {
   currentStepIndex.value = Math.min(walkthroughSteps.value.length - 1, currentStepIndex.value + 1)
 }
 
+function onStepRangeInput(event) {
+  currentStepIndex.value = Number(event.target.value)
+}
+
+function scrollToDocHeading(anchorId) {
+  if (!anchorId) return
+  const el = document.getElementById(anchorId)
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+}
+
+function shouldIgnoreStudioKeys(target) {
+  if (!(target instanceof HTMLElement)) return true
+  const tag = target.tagName
+  if (tag === 'TEXTAREA') return true
+  if (tag === 'SELECT') return true
+  if (tag === 'INPUT' && target.type !== 'range') return true
+  return false
+}
+
+function onStudioKeydown(event) {
+  if (activeTab.value === 'examples' || activeTab.value === 'source') return
+  if (shouldIgnoreStudioKeys(event.target)) return
+
+  if (event.key === 'ArrowLeft') {
+    event.preventDefault()
+    prevStep()
+    return
+  }
+  if (event.key === 'ArrowRight') {
+    event.preventDefault()
+    nextStep()
+    return
+  }
+  if (event.key === 'Home') {
+    event.preventDefault()
+    currentStepIndex.value = 0
+    return
+  }
+  if (event.key === 'End') {
+    event.preventDefault()
+    currentStepIndex.value = walkthroughSteps.value.length - 1
+  }
+}
+
+watch(
+  () => [autoAdvance.value, activeTab.value, props.doc.id],
+  () => {
+    clearAutoAdvance()
+    if (!autoAdvance.value || activeTab.value !== 'walkthrough') return
+    autoAdvanceTimer = window.setInterval(() => {
+      if (currentStepIndex.value >= walkthroughSteps.value.length - 1) {
+        currentStepIndex.value = 0
+      } else {
+        nextStep()
+      }
+    }, 9000)
+  },
+  { immediate: true },
+)
+
 watch(
   () => props.doc.id,
   () => {
     activeTab.value = 'walkthrough'
     currentStepIndex.value = 0
     playgroundMode.value = 'explain'
+    autoAdvance.value = false
   },
 )
+
+watch(
+  () => walkthroughSteps.value.length,
+  (len) => {
+    if (currentStepIndex.value > len - 1) {
+      currentStepIndex.value = Math.max(0, len - 1)
+    }
+  },
+)
+
+onBeforeUnmount(() => {
+  clearAutoAdvance()
+})
 </script>
 
 <style scoped>
@@ -264,6 +394,12 @@ watch(
   margin-top: 1.1rem;
   padding-top: 1.1rem;
   border-top: 1px solid rgba(173, 188, 214, 0.1);
+  outline: none;
+}
+
+.learning-studio:focus-visible {
+  box-shadow: 0 0 0 2px rgba(241, 212, 170, 0.35);
+  border-radius: 12px;
 }
 
 .studio-head,
@@ -310,6 +446,16 @@ watch(
   cursor: pointer;
 }
 
+.studio-tabs button:focus-visible,
+.playground-mode button:focus-visible,
+.walkthrough-nav button:focus-visible,
+.playground-node:focus-visible,
+.anchor-jump:focus-visible,
+.step-dot:focus-visible {
+  outline: 2px solid rgba(241, 212, 170, 0.55);
+  outline-offset: 2px;
+}
+
 .studio-tabs button.active,
 .playground-mode button.active,
 .walkthrough-nav .primary,
@@ -329,6 +475,39 @@ watch(
   border: 1px solid rgba(173, 188, 214, 0.08);
 }
 
+.walkthrough-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.auto-advance {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  color: rgba(226, 232, 244, 0.78);
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.auto-advance input {
+  accent-color: #f1d4aa;
+}
+
+.anchor-jump {
+  border: 1px solid rgba(173, 188, 214, 0.2);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  color: #f1d4aa;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
 .step-index {
   color: rgba(226, 232, 244, 0.68);
   font-size: 0.82rem;
@@ -339,6 +518,47 @@ watch(
   flex-direction: column;
   gap: 0.45rem;
   color: rgba(226, 232, 244, 0.72);
+}
+
+.step-dots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  align-items: center;
+}
+
+.step-dot {
+  width: 11px;
+  height: 11px;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid rgba(173, 188, 214, 0.35);
+  background: rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+}
+
+.step-dot.active {
+  background: rgba(241, 212, 170, 0.85);
+  border-color: rgba(241, 212, 170, 0.9);
+}
+
+.keys-hint {
+  margin: 0;
+  font-size: 0.76rem;
+  color: rgba(168, 187, 223, 0.65);
+  line-height: 1.45;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .walkthrough-card,

@@ -1,5 +1,11 @@
 <template>
-  <div class="example-stepper">
+  <div
+    class="example-stepper"
+    tabindex="0"
+    role="region"
+    aria-label="Interactive example stepper"
+    @keydown="onStepperKeydown"
+  >
     <div class="stepper-top">
       <div>
         <p class="stepper-kicker">Interactive example</p>
@@ -7,16 +13,10 @@
       </div>
 
       <div class="mode-switch">
-        <button
-          :class="{ active: mode === 'forward' }"
-          @click="mode = 'forward'"
-        >
+        <button type="button" :class="{ active: mode === 'forward' }" @click="mode = 'forward'">
           Forward
         </button>
-        <button
-          :class="{ active: mode === 'backward' }"
-          @click="mode = 'backward'"
-        >
+        <button type="button" :class="{ active: mode === 'backward' }" @click="mode = 'backward'">
           Backward
         </button>
       </div>
@@ -26,6 +26,7 @@
       <button
         v-for="example in examples"
         :key="example.id"
+        type="button"
         :class="{ active: example.id === activeId }"
         @click="selectExample(example.id)"
       >
@@ -42,24 +43,39 @@
       </p>
     </div>
 
+    <label class="step-slider">
+      <span>Progress</span>
+      <input
+        type="range"
+        :min="0"
+        :max="activeExample.steps.length - 1"
+        step="1"
+        :value="currentStepIndex"
+        @input="onRangeInput($event)"
+      />
+    </label>
+
+    <p class="keys-hint">Tip: focus this panel, then use ← → or Home / End to change steps.</p>
+
     <div class="step-card">
       <div class="step-header">
         <span>Step {{ currentStepIndex + 1 }} / {{ activeExample.steps.length }}</span>
         <strong>{{ currentStep.label }}</strong>
       </div>
-      <p>{{ currentText }}</p>
+      <p aria-live="polite">{{ currentText }}</p>
     </div>
 
     <div class="step-controls">
-      <button @click="prevStep" :disabled="currentStepIndex === 0">Previous</button>
+      <button type="button" @click="prevStep" :disabled="currentStepIndex === 0">Previous</button>
       <button
         v-if="currentStepIndex < activeExample.steps.length - 1"
+        type="button"
         class="primary"
         @click="nextStep"
       >
         Next
       </button>
-      <button v-else class="primary" @click="showAnswer = !showAnswer">
+      <button v-else type="button" class="primary" @click="showAnswer = !showAnswer">
         {{ showAnswer ? 'Hide result' : 'Reveal result' }}
       </button>
     </div>
@@ -76,7 +92,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 const props = defineProps({
   examples: {
@@ -97,6 +113,19 @@ const activeExample = computed(
 const currentStep = computed(() => activeExample.value.steps[currentStepIndex.value])
 const currentText = computed(() =>
   mode.value === 'forward' ? currentStep.value.forward : currentStep.value.backward,
+)
+
+watch(
+  () => props.examples,
+  (list) => {
+    const first = list[0]
+    if (!first) return
+    if (!list.some((ex) => ex.id === activeId.value)) {
+      activeId.value = first.id
+      resetProgress()
+    }
+  },
+  { deep: true },
 )
 
 function resetProgress() {
@@ -120,6 +149,54 @@ function nextStep() {
     currentStepIndex.value + 1,
   )
 }
+
+function onRangeInput(event) {
+  currentStepIndex.value = Number(event.target.value)
+  showAnswer.value = false
+}
+
+function shouldIgnoreKeys(target) {
+  if (!(target instanceof HTMLElement)) return true
+  const tag = target.tagName
+  if (tag === 'TEXTAREA') return true
+  if (tag === 'SELECT') return true
+  if (tag === 'INPUT' && target.type === 'text') return true
+  if (tag === 'INPUT' && target.type === 'search') return true
+  if (tag === 'INPUT' && target.type === 'url') return true
+  if (tag === 'INPUT' && target.type === 'email') return true
+  return false
+}
+
+function onStepperKeydown(event) {
+  if (shouldIgnoreKeys(event.target)) return
+  if (event.target instanceof HTMLInputElement && event.target.type === 'range') {
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') return
+  }
+
+  if (event.key === 'ArrowLeft') {
+    event.preventDefault()
+    prevStep()
+    return
+  }
+  if (event.key === 'ArrowRight') {
+    event.preventDefault()
+    if (currentStepIndex.value < activeExample.value.steps.length - 1) {
+      nextStep()
+    }
+    return
+  }
+  if (event.key === 'Home') {
+    event.preventDefault()
+    currentStepIndex.value = 0
+    showAnswer.value = false
+    return
+  }
+  if (event.key === 'End') {
+    event.preventDefault()
+    currentStepIndex.value = activeExample.value.steps.length - 1
+    showAnswer.value = false
+  }
+}
 </script>
 
 <style scoped>
@@ -131,6 +208,12 @@ function nextStep() {
   border: 1px solid rgba(173, 188, 214, 0.14);
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.03);
+  outline: none;
+}
+
+.example-stepper:focus-visible {
+  box-shadow: 0 0 0 2px rgba(242, 193, 78, 0.35);
+  border-radius: 18px;
 }
 
 .stepper-top,
@@ -177,6 +260,13 @@ function nextStep() {
   cursor: pointer;
 }
 
+.mode-switch button:focus-visible,
+.example-tabs button:focus-visible,
+.step-controls button:focus-visible {
+  outline: 2px solid rgba(242, 193, 78, 0.55);
+  outline-offset: 2px;
+}
+
 .mode-switch button.active,
 .example-tabs button.active,
 .step-controls .primary {
@@ -208,5 +298,20 @@ function nextStep() {
 .answer-card {
   border-color: rgba(242, 193, 78, 0.3);
   background: rgba(242, 193, 78, 0.08);
+}
+
+.step-slider {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  color: rgba(226, 232, 244, 0.72);
+  font-size: 0.82rem;
+}
+
+.keys-hint {
+  margin: 0;
+  font-size: 0.76rem;
+  color: rgba(168, 187, 223, 0.65);
+  line-height: 1.45;
 }
 </style>

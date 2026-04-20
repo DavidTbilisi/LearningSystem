@@ -279,6 +279,73 @@ export const docExamples = {
         },
       ],
     },
+    {
+      id: 'cast-storm-edge',
+      title: 'Critical temporal trigger edge',
+      inputLabel: 'Forward input',
+      inputValue: 'A rare event instantly rewires several peers — strongest verbs, lightning stream, purple storm time',
+      outputLabel: 'CAST byte + reading',
+      outputValue: '11 11 11 11 — Dragon exploding lightning in purple storm (reverse-leaning source, critical, events, temporal)',
+      backwardPrompt: 'You memorize Dragon exploding lightning in purple storm on an edge. Which stress pattern is that?',
+      backwardAnswer:
+        'All 11s: reactive source stance, exploding action, lightning stream, purple storm stability — a burst trigger edge.',
+      steps: [
+        {
+          label: 'Character',
+          forward: 'Dragon marks a reverse-leaning or reactor stance on the source side of the arrow.',
+          backward: 'When the source feels “hit back” or triggered, Dragon is the CAST person slot.',
+        },
+        {
+          label: 'Action',
+          forward: 'Exploding is the strongest transform — the relationship rewrites state instead of nudging it.',
+          backward: 'If the edge is catastrophic or discontinuous, Action sits at exploding.',
+        },
+        {
+          label: 'Stream',
+          forward: 'Lightning is the stream slot for discrete events, spikes, or triggers rather than bulk data.',
+          backward: 'Lightning answers “what moves” with pulses, not tanks of bits.',
+        },
+        {
+          label: 'Time',
+          forward: 'Purple storm marks temporal instability — the edge may vanish, spike, or reschedule.',
+          backward: 'Purple storm is the CAST clock for “this relationship is historically contingent.”',
+        },
+      ],
+    },
+    {
+      id: 'cast-graph-walk',
+      title: 'Palace walk as graph traversal',
+      inputLabel: 'Forward input',
+      inputValue: 'You stand in the Router room and need Middleware, Controller, Model, and Database in order',
+      outputLabel: 'CAST + palace rule',
+      outputValue:
+        'Each hop is one CAST scene on the door or path between rooms; node identity stays Georgian while edges carry bytes.',
+      backwardPrompt: 'Why keep one CAST scene per edge instead of splitting a hop across two loci?',
+      backwardAnswer:
+        'One edge equals one mnemonic transaction; splitting would break retrieval symmetry with Anki backs and walking order.',
+      steps: [
+        {
+          label: 'Nodes first',
+          forward: 'Encode each room occupant with the Georgian quadruple so the vertex story is stable.',
+          backward: 'If the animal-environment scene is weak, every outgoing CAST edge will feel untethered.',
+        },
+        {
+          label: 'Edges second',
+          forward: 'For every doorway or bridge, commit a single 8-bit CAST scene that names how traffic moves.',
+          backward: 'The byte is the portable summary you can speak aloud while moving through the palace.',
+        },
+        {
+          label: 'Topology',
+          forward: 'Lay rooms so distance mirrors importance — hubs central, clusters grouped, bottlenecks narrow corridors.',
+          backward: 'Spatial mistakes show up as wrong intuitions about dependency depth.',
+        },
+        {
+          label: 'Drill',
+          forward: 'Walk forward along the path narrating CAST scenes, backward by decoding bytes to relationships.',
+          backward: 'Backward mode checks whether you can rebuild the graph from edge feelings alone.',
+        },
+      ],
+    },
   ],
   'georgian-system': [
     {
