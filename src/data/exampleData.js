@@ -283,12 +283,12 @@ export const docExamples = {
       id: 'cast-storm-edge',
       title: 'Critical temporal trigger edge',
       inputLabel: 'Forward input',
-      inputValue: 'A rare event instantly rewires several peers — strongest verbs, lightning stream, purple storm time',
+      inputValue: 'A rare event instantly rewires several peers — strongest verbs, stone stream, purple storm time',
       outputLabel: 'CAST byte + reading',
-      outputValue: '11 11 11 11 — Dragon exploding lightning in purple storm (reverse-leaning source, critical, events, temporal)',
-      backwardPrompt: 'You memorize Dragon exploding lightning in purple storm on an edge. Which stress pattern is that?',
+      outputValue: '11 11 11 11 — Dragon exploding stone in purple storm (reverse-leaning source, critical, events, temporal)',
+      backwardPrompt: 'You memorize Dragon exploding stone in purple storm on an edge. Which stress pattern is that?',
       backwardAnswer:
-        'All 11s: reactive source stance, exploding action, lightning stream, purple storm stability — a burst trigger edge.',
+        'All 11s: reactive source stance, exploding action, stone stream, purple storm stability — a burst trigger edge.',
       steps: [
         {
           label: 'Character',
@@ -302,8 +302,8 @@ export const docExamples = {
         },
         {
           label: 'Stream',
-          forward: 'Lightning is the stream slot for discrete events, spikes, or triggers rather than bulk data.',
-          backward: 'Lightning answers “what moves” with pulses, not tanks of bits.',
+          forward: 'Stone is the stream slot for discrete events, spikes, or triggers rather than bulk data.',
+          backward: 'Stone answers “what moves” with snaps and releases, not tanks of bits.',
         },
         {
           label: 'Time',

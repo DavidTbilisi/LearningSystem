@@ -122,7 +122,7 @@ CAST encodes every edge as an 8-bit string → one scene with 4 components.
 | 00 | 🧱 rock | data / structure |
 | 01 | 💧 water | energy / resources |
 | 10 | ☁️ cloud | information / signals |
-| 11 | ⚡ lightning | events / triggers |
+| 11 | 🪨 stone | events / triggers |
 
 ### T — Time (GH): stability
 
@@ -202,8 +202,8 @@ Nodes:
 - Great powers (Mermaid — peer rivals)
 
 Edges:
-- Assassination → Alliance cascade: `11 11 11 11` → Dragon exploding lightning in purple storm (trigger, critical, event, temporal)
-- Mobilization → War: `10 11 11 00` → Mage exploding lightning in red cave (subtle but permanent transform)
+- Assassination → Alliance cascade: `11 11 11 11` → Dragon exploding stone in purple storm (trigger, critical, event, temporal)
+- Mobilization → War: `10 11 11 00` → Mage exploding stone in red cave (subtle but permanent transform)
 - Great powers ↔ each other: `01 10 10 01` → Mermaid spreading cloud in blue ocean (bidirectional signaling, mostly active)
 
 ### Example 4 — Argument structure (philosophy paper)
@@ -277,7 +277,7 @@ NODE (Georgian, 4 slots):
 CAST EDGE (8 bits, 4 slots):
   AB = C = Character  00 Giant→  01 Mermaid↔  10 Mage→  11 Dragon←
   CD = A = Action     00 crush   01 flow      10 spread  11 explode
-  EF = S = Stream     00 rock    01 water     10 cloud   11 lightning
+  EF = S = Stream     00 rock    01 water     10 cloud   11 stone
   GH = T = Time       00 cave    01 ocean     10 sky     11 volcano
 
 READING ORDER: WHO / HOW / WHAT / WHEN

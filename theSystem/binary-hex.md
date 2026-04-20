@@ -10,17 +10,17 @@ one unlocks the others.
 
 Every 4-bit value (hex 0–F) = **Element × State**.
 
-- **High bits (0–1): Element** — 00 Earth · 01 Water · 10 Air · 11 Fire
+- **High bits (0–1): Element** — 00 Earth · 01 Air · 10 Water · 11 Earth (two Earth bands: 0–3 surface, C–F deep)
 - **Low bits (2–3): State** — 00 Solid · 01 Liquid · 10 Gas · 11 Plasma
 
 ```
                     STATE →
                     00 Solid   01 Liquid   10 Gas      11 Plasma
-ELEMENT ↓ (rows Fire → Earth — matches studio matrix; bits unchanged)
-11 Fire             C (ember)  D (lava)    E (smoke)   F (inferno)
-10 Air              8 (crystal)9 (dew)     A (breeze)  B (aurora)
-01 Water            4 (ice)    5 (ocean)   6 (mist)    7 (storm)
+ELEMENT ↓ (rows match studio matrix top → bottom)
 00 Earth            0 (rock)   1 (mud)     2 (dust)    3 (magma)
+01 Air              4 (crystal)5 (dew)     6 (breeze)  7 (aurora)
+10 Water            8 (ice)    9 (ocean)   A (mist)    B (storm)
+11 Earth            C (bedrock)D (clay)    E (sinkhole)F (mantle)
 ```
 
 ---
@@ -33,25 +33,25 @@ ELEMENT ↓ (rows Fire → Earth — matches studio matrix; bits unchanged)
 | **1** | 0001 | Earth | Liquid | 🟫 Mud pit |
 | **2** | 0010 | Earth | Gas | 🌫️ Dust cloud |
 | **3** | 0011 | Earth | Plasma | 🌋 Magma flow |
-| **4** | 0100 | Water | Solid | 🧊 Ice block |
-| **5** | 0101 | Water | Liquid | 🌊 Ocean wave |
-| **6** | 0110 | Water | Gas | 💨 Mist veil |
-| **7** | 0111 | Water | Plasma | ⛈️ Lightning storm |
-| **8** | 1000 | Air | Solid | 💎 Crystal |
-| **9** | 1001 | Air | Liquid | 💧 Dew drop |
-| **A** | 1010 | Air | Gas | 🌬️ Breeze |
-| **B** | 1011 | Air | Plasma | 🌌 Aurora |
-| **C** | 1100 | Fire | Solid | 🧱 Ember (glowing coal) |
-| **D** | 1101 | Fire | Liquid | 🌋 Lava flow |
-| **E** | 1110 | Fire | Gas | 💨 Smoke column |
-| **F** | 1111 | Fire | Plasma | 🔥 Inferno wall |
+| **4** | 0100 | Air | Solid | 💎 Crystal |
+| **5** | 0101 | Air | Liquid | 💧 Dew drop |
+| **6** | 0110 | Air | Gas | 🌬️ Breeze |
+| **7** | 0111 | Air | Plasma | 🌌 Aurora |
+| **8** | 1000 | Water | Solid | 🧊 Ice block |
+| **9** | 1001 | Water | Liquid | 🌊 Ocean wave |
+| **A** | 1010 | Water | Gas | 💨 Mist veil |
+| **B** | 1011 | Water | Plasma | ⛈️ Lightning storm |
+| **C** | 1100 | Earth | Solid | 🪨 Bedrock slab |
+| **D** | 1101 | Earth | Liquid | 🟫 Clay vein |
+| **E** | 1110 | Earth | Gas | 🌫️ Sinkhole breath |
+| **F** | 1111 | Earth | Plasma | 🌋 Mantle flare |
 
-**Note:** Some scenes collide visually (3 magma vs D lava, 6 mist vs E smoke).
-Disambiguate by the *element source*:
-- 3 (magma) = *earth* becoming extreme → erupting ground
-- D (lava) = *fire* becoming liquid → flowing from volcano mouth
-- 6 (mist) = *water* softening → cool rising vapor
-- E (smoke) = *fire* becoming gas → dark rising column
+**Note:** Some scenes collide visually (3 surface magma vs F deep mantle flare, A mist vs 2 dust).
+Disambiguate by the *high nibble* (00 vs 11 Earth bands, 01 Air vs 10 Water):
+- **3** = 00 Earth plasma (surface erupting ground)
+- **F** = 11 Earth plasma (deep / subduction heat)
+- **A** = 10 Water gas (cool vapor bank)
+- **2** = 00 Earth gas (dry dust lifting)
 
 ---
 
@@ -59,9 +59,9 @@ Disambiguate by the *element source*:
 
 A 4-bit value = one hex scene. Use when encoding binary directly:
 
-- `1010` → A → Breeze
-- `0101` → 5 → Ocean wave
-- `1111` → F → Inferno wall
+- `1010` → A → Mist veil
+- `0101` → 5 → Dew drop
+- `1111` → F → Mantle flare
 
 Two nibbles chain to form a byte (see 8-bit section).
 
@@ -87,7 +87,7 @@ Matrix2: [Element][State]   = Object    × Setting
 |------|------|------|--------------|------------|
 | AB | Character (Person) | *Who* acts | 00 Giant (earth), 01 Mermaid (water), 10 Mage (air), 11 Dragon (fire) | — |
 | CD | Form (Action) | *How* they act | — | 00 crushing (solid), 01 flowing (liquid), 10 spreading (gas), 11 exploding (plasma) |
-| EF | Object | *What* is acted on | 00 rock (earth), 01 water, 10 cloud (air), 11 lightning (fire) | — |
+| EF | Object | *What* is acted on | 00 rock, 01 water, 10 cloud, 11 stone (CAST stream; aligns with elemental bands) | — |
 | GH | Setting (Environment) | *Where/when* | — | 00 red cave (solid), 01 blue ocean (liquid), 10 green sky (gas), 11 purple storm (plasma) |
 
 ### The cross-matrix insight
@@ -108,7 +108,7 @@ AB (Character):
 CD (Action):
   00 crushing   01 flowing      10 spreading  11 exploding
 EF (Object):
-  00 🧱 rock    01 💧 water     10 ☁️ cloud    11 ⚡ lightning
+  00 🧱 rock    01 💧 water     10 ☁️ cloud    11 🪨 stone
 GH (Setting):
   00 🪨 red cave    01 🌊 blue ocean
   10 ☁️ green sky   11 🌋 purple storm volcano
@@ -121,7 +121,7 @@ GH (Setting):
 | `00000000` | Giant | crushing | rock | red cave | *Giant crushing rock in red cave* |
 | `01011010` | Mermaid | flowing | cloud | green sky | *Mermaid flowing cloud in green sky* |
 | `10110011` | Mage | exploding | rock | purple storm | *Mage exploding rock in purple storm* |
-| `11111111` | Dragon | exploding | lightning | purple storm | *Dragon exploding lightning in purple storm* |
+| `11111111` | Dragon | exploding | stone | purple storm | *Dragon exploding stone in purple storm* |
 
 ---
 
@@ -169,9 +169,9 @@ The elemental "state" axis maps to CAST action verbs, and the elemental
 | Bits | Element (elemental) | Stream (CAST) |
 |------|---------------------|---------------|
 | 00 | Earth | rock |
-| 01 | Water | water |
-| 10 | Air | cloud |
-| 11 | Fire | lightning |
+| 01 | Air | cloud |
+| 10 | Water | water |
+| 11 | Earth | stone |
 
 So "solid earth" (hex 0) = "crushing rock" (CAST 00-stream-00). The verb form
 is what changes when you shift from binary-value thinking to edge-relationship

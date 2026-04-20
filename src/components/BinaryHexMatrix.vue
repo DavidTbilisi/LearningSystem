@@ -57,42 +57,42 @@ const states = [
   { label: 'Plasma', bits: '11' },
 ]
 
-/** Rows top → bottom: Fire, Air, Water, Earth (reversed from 00→11 canonical listing). Hex mapping unchanged. */
+/** High nibble: 00 Earth, 01 Air, 10 Water, 11 Earth (second band). Rows top → bottom match this order. */
 const matrix = [
   {
-    element: 'Fire',
-    states: [
-      { hex: 'C', scene: 'Ember', element: 'Fire', state: 'Solid' },
-      { hex: 'D', scene: 'Lava flow', element: 'Fire', state: 'Liquid' },
-      { hex: 'E', scene: 'Smoke column', element: 'Fire', state: 'Gas' },
-      { hex: 'F', scene: 'Inferno wall', element: 'Fire', state: 'Plasma' },
-    ],
-  },
-  {
-    element: 'Air',
-    states: [
-      { hex: '8', scene: 'Crystal', element: 'Air', state: 'Solid' },
-      { hex: '9', scene: 'Dew drop', element: 'Air', state: 'Liquid' },
-      { hex: 'A', scene: 'Breeze', element: 'Air', state: 'Gas' },
-      { hex: 'B', scene: 'Aurora', element: 'Air', state: 'Plasma' },
-    ],
-  },
-  {
-    element: 'Water',
-    states: [
-      { hex: '4', scene: 'Ice block', element: 'Water', state: 'Solid' },
-      { hex: '5', scene: 'Ocean wave', element: 'Water', state: 'Liquid' },
-      { hex: '6', scene: 'Mist veil', element: 'Water', state: 'Gas' },
-      { hex: '7', scene: 'Lightning storm', element: 'Water', state: 'Plasma' },
-    ],
-  },
-  {
-    element: 'Earth',
+    element: 'Earth · 00',
     states: [
       { hex: '0', scene: 'Rock wall', element: 'Earth', state: 'Solid' },
       { hex: '1', scene: 'Mud pit', element: 'Earth', state: 'Liquid' },
       { hex: '2', scene: 'Dust cloud', element: 'Earth', state: 'Gas' },
       { hex: '3', scene: 'Magma flow', element: 'Earth', state: 'Plasma' },
+    ],
+  },
+  {
+    element: 'Air · 01',
+    states: [
+      { hex: '4', scene: 'Crystal', element: 'Air', state: 'Solid' },
+      { hex: '5', scene: 'Dew drop', element: 'Air', state: 'Liquid' },
+      { hex: '6', scene: 'Breeze', element: 'Air', state: 'Gas' },
+      { hex: '7', scene: 'Aurora', element: 'Air', state: 'Plasma' },
+    ],
+  },
+  {
+    element: 'Water · 10',
+    states: [
+      { hex: '8', scene: 'Ice block', element: 'Water', state: 'Solid' },
+      { hex: '9', scene: 'Ocean wave', element: 'Water', state: 'Liquid' },
+      { hex: 'A', scene: 'Mist veil', element: 'Water', state: 'Gas' },
+      { hex: 'B', scene: 'Lightning storm', element: 'Water', state: 'Plasma' },
+    ],
+  },
+  {
+    element: 'Earth · 11',
+    states: [
+      { hex: 'C', scene: 'Bedrock slab', element: 'Earth', state: 'Solid' },
+      { hex: 'D', scene: 'Clay vein', element: 'Earth', state: 'Liquid' },
+      { hex: 'E', scene: 'Sinkhole breath', element: 'Earth', state: 'Gas' },
+      { hex: 'F', scene: 'Mantle flare', element: 'Earth', state: 'Plasma' },
     ],
   },
 ]

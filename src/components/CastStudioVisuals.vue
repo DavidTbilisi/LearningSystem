@@ -226,7 +226,7 @@ const streamOpts = [
   { bits: '00', label: 'rock', flows: 'data / structure' },
   { bits: '01', label: 'water', flows: 'energy / resources' },
   { bits: '10', label: 'cloud', flows: 'information / signals' },
-  { bits: '11', label: 'lightning', flows: 'events / triggers' },
+  { bits: '11', label: 'stone', flows: 'events / triggers' },
 ]
 
 const timeOpts = [

@@ -68,7 +68,7 @@ The words **rock, lightning, lava, mud, cloud, ocean, storm, wave, fire,
 water, ice** appear across three systems:
 
 - **SEM3** uses them as category items (e.g., Touch 44 = Rock, Vision 05 = Lightning)
-- **Hex/Binary** uses them as element×state scenes (Hex 0 = Rock wall, Hex 7 = Lightning storm)
+- **Hex/Binary** uses them as element×state scenes (Hex 0 = Rock wall, Hex B = Lightning storm)
 - **CAST** uses them as stream/time values (Stream 00 = rock, Time 11 = purple storm)
 
 **The rule: role in the scene determines the system.**

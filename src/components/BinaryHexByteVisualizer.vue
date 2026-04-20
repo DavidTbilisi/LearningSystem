@@ -99,7 +99,7 @@ const efOptions = [
   { label: 'rock' },
   { label: 'water' },
   { label: 'cloud' },
-  { label: 'lightning' },
+  { label: 'stone' },
 ]
 const ghOptions = [
   { label: 'red cave' },
