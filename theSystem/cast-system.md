@@ -95,6 +95,8 @@ CAST encodes every edge as an 8-bit string → one scene with 4 components.
 | EF | Stream | What flows through | WHAT |
 | GH | Time | Stability / conditionality | WHEN |
 
+**Studio / tooling:** The learning app loads the same row-level lexicon from `src/data/castLexicon.js` (including short “when to pick” hints in the CAST playground). If you change a row’s meaning here, update that file so the playground and tests stay aligned.
+
 ### C — Character (AB): source role + direction
 
 | Bits | Person | Direction | Source role |

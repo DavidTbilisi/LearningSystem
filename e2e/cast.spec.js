@@ -37,6 +37,9 @@ test.describe('CAST document', () => {
     await expect(page.getByTestId('cast-flow-rail')).toBeVisible()
     await expect(page.getByTestId('cast-composer')).toBeVisible()
 
+    await page.getByTestId('cast-net-node-ac-2').click()
+    await expect(page.getByTestId('cast-select-action')).toHaveValue('2')
+
     const sceneBefore = await page.getByTestId('cast-scene-text').textContent()
     await page.getByTestId('cast-select-action').selectOption({ index: 3 })
     const sceneAfter = await page.getByTestId('cast-scene-text').textContent()

@@ -44,30 +44,53 @@
       <h4 id="cast-tables-title">Slot lookup (edge)</h4>
       <div class="slot-grids">
         <div class="slot-grid">
-          <h5>Character</h5>
+          <h5>{{ castSlotAxes.character.title }}</h5>
+          <p class="slot-axis-caption">{{ castSlotAxes.character.caption }}</p>
           <ul>
-            <li v-for="c in characterOpts" :key="c.bits">{{ c.bits }} — {{ c.label }} ({{ c.arrow }})</li>
+            <li v-for="c in characterOpts" :key="c.bits" :title="c.pickWhen">
+              <span class="slot-row-main">{{ c.bits }} — {{ c.label }} ({{ c.arrow }}) · {{ c.role }}</span>
+              <span class="slot-row-when">{{ c.pickWhen }}</span>
+            </li>
           </ul>
         </div>
         <div class="slot-grid">
-          <h5>Action</h5>
+          <h5>{{ castSlotAxes.action.title }}</h5>
+          <p class="slot-axis-caption">{{ castSlotAxes.action.caption }}</p>
           <ul>
-            <li v-for="a in actionOpts" :key="a.bits">{{ a.bits }} — {{ a.label }} — {{ a.strength }}</li>
+            <li v-for="a in actionOpts" :key="a.bits" :title="a.pickWhen">
+              <span class="slot-row-main"
+                >{{ a.bits }} — {{ a.label }} — {{ a.meaning }} · {{ a.strength }}</span
+              >
+              <span class="slot-row-when">{{ a.pickWhen }}</span>
+            </li>
           </ul>
         </div>
         <div class="slot-grid">
-          <h5>Stream</h5>
+          <h5>{{ castSlotAxes.stream.title }}</h5>
+          <p class="slot-axis-caption">{{ castSlotAxes.stream.caption }}</p>
           <ul>
-            <li v-for="s in streamOpts" :key="s.bits">{{ s.bits }} — {{ s.label }} — {{ s.flows }}</li>
+            <li v-for="s in streamOpts" :key="s.bits" :title="s.pickWhen">
+              <span class="slot-row-main">{{ s.bits }} — {{ s.label }} — {{ s.flows }}</span>
+              <span class="slot-row-when">{{ s.pickWhen }}</span>
+            </li>
           </ul>
         </div>
         <div class="slot-grid">
-          <h5>Time</h5>
+          <h5>{{ castSlotAxes.time.title }}</h5>
+          <p class="slot-axis-caption">{{ castSlotAxes.time.caption }}</p>
           <ul>
-            <li v-for="t in timeOpts" :key="t.bits">{{ t.bits }} — {{ t.label }} — {{ t.stability }}</li>
+            <li v-for="t in timeOpts" :key="t.bits" :title="t.pickWhen">
+              <span class="slot-row-main">{{ t.bits }} — {{ t.label }} — {{ t.stability }}</span>
+              <span class="slot-row-when">{{ t.pickWhen }}</span>
+            </li>
           </ul>
         </div>
       </div>
+      <p class="cast-doc-link">
+        <RouterLink :to="{ name: 'document', params: { id: 'cast-system' } }">Open the full CAST document</RouterLink>
+        for worked writes, domain sketches, and repair — same lexicon as
+        <code>src/data/castLexicon.js</code> (update both when you change a row).
+      </p>
     </section>
 
     <section class="cast-block cast-bridge">
@@ -94,25 +117,33 @@
         <label class="control">
           <span>AB · Character</span>
           <select v-model.number="ab" data-testid="cast-select-character">
-            <option v-for="(opt, i) in characterOpts" :key="opt.bits" :value="i">{{ opt.label }} ({{ opt.bits }})</option>
+            <option v-for="(opt, i) in characterOpts" :key="opt.bits" :value="i" :title="opt.pickWhen">
+              {{ opt.label }} ({{ opt.bits }})
+            </option>
           </select>
         </label>
         <label class="control">
           <span>CD · Action</span>
           <select v-model.number="cd" data-testid="cast-select-action">
-            <option v-for="(opt, i) in actionOpts" :key="opt.bits" :value="i">{{ opt.label }} ({{ opt.bits }})</option>
+            <option v-for="(opt, i) in actionOpts" :key="opt.bits" :value="i" :title="opt.pickWhen">
+              {{ opt.label }} ({{ opt.bits }})
+            </option>
           </select>
         </label>
         <label class="control">
           <span>EF · Stream</span>
           <select v-model.number="ef" data-testid="cast-select-stream">
-            <option v-for="(opt, i) in streamOpts" :key="opt.bits" :value="i">{{ opt.label }} ({{ opt.bits }})</option>
+            <option v-for="(opt, i) in streamOpts" :key="opt.bits" :value="i" :title="opt.pickWhen">
+              {{ opt.label }} ({{ opt.bits }})
+            </option>
           </select>
         </label>
         <label class="control">
           <span>GH · Time</span>
           <select v-model.number="gh" data-testid="cast-select-time">
-            <option v-for="(opt, i) in timeOpts" :key="opt.bits" :value="i">{{ opt.label }} ({{ opt.bits }})</option>
+            <option v-for="(opt, i) in timeOpts" :key="opt.bits" :value="i" :title="opt.pickWhen">
+              {{ opt.label }} ({{ opt.bits }})
+            </option>
           </select>
         </label>
       </div>
@@ -131,14 +162,14 @@
       <p class="cast-copy">
         Same idea as stacked layers in a net: each column is one 2-bit choice; many weak connections are possible,
         but your composer picks one path (bold) from input bits through WHO → HOW → WHAT → WHEN into the edge
-        encoding.
+        encoding. <strong>Click a node</strong> to set that slot (the dropdowns above update too).
       </p>
       <div class="decision-net-scroll" data-testid="cast-decision-network">
         <svg
           class="decision-svg"
           viewBox="0 0 780 210"
           preserveAspectRatio="xMidYMid meet"
-          role="img"
+          role="group"
           :aria-label="decisionNetAria"
         >
           <defs>
@@ -160,12 +191,30 @@
           </g>
           <g v-for="col in decisionColumns" :key="col.key">
             <text :x="col.titleX" y="22" class="net-title">{{ col.title }}</text>
-            <g v-for="node in col.nodes" :key="node.key">
+            <g
+              v-for="(node, ni) in col.nodes"
+              :key="node.key"
+              :class="['net-node-group', { 'net-node-group--hit': col.slot }]"
+              :data-testid="col.slot ? `cast-net-node-${col.key}-${ni}` : undefined"
+              :role="col.slot ? 'button' : undefined"
+              :tabindex="col.slot ? 0 : undefined"
+              :aria-label="col.slot ? netNodeAria(col, node) : undefined"
+              :aria-pressed="col.slot ? (node.active ? 'true' : 'false') : undefined"
+              @click="col.slot && pickNetSlot(col.slot, ni)"
+              @keydown="col.slot && onNetNodeKeydown($event, col.slot, ni)"
+            >
               <circle
                 :cx="node.cx"
                 :cy="node.cy"
                 :r="node.r"
                 :class="['net-node', col.layerClass, { 'net-node--active': node.active }]"
+              />
+              <circle
+                v-if="col.slot"
+                :cx="node.cx"
+                :cy="node.cy"
+                :r="node.r + 14"
+                class="net-node-hitarea"
               />
               <text :x="node.cx" :y="node.cy + 3" class="net-node-label" text-anchor="middle">
                 {{ node.label }}
@@ -207,34 +256,14 @@
 
 <script setup>
 import { computed, ref } from 'vue'
-
-const characterOpts = [
-  { bits: '00', label: 'Giant', arrow: '→ hub', role: 'Hub / controller' },
-  { bits: '01', label: 'Mermaid', arrow: '↔ peer', role: 'Partner exchange' },
-  { bits: '10', label: 'Mage', arrow: '→ service', role: 'Helper / subtle' },
-  { bits: '11', label: 'Dragon', arrow: '← reverse', role: 'Reactor / triggered' },
-]
-
-const actionOpts = [
-  { bits: '00', label: 'crushing', strength: 'strong control' },
-  { bits: '01', label: 'flowing', strength: 'medium feed' },
-  { bits: '10', label: 'spreading', strength: 'weak influence' },
-  { bits: '11', label: 'exploding', strength: 'critical transform' },
-]
-
-const streamOpts = [
-  { bits: '00', label: 'rock', flows: 'data / structure' },
-  { bits: '01', label: 'water', flows: 'energy / resources' },
-  { bits: '10', label: 'cloud', flows: 'information / signals' },
-  { bits: '11', label: 'stone', flows: 'events / triggers' },
-]
-
-const timeOpts = [
-  { bits: '00', label: 'red cave', stability: 'permanent' },
-  { bits: '01', label: 'blue ocean', stability: 'mostly active' },
-  { bits: '10', label: 'green sky', stability: 'conditional' },
-  { bits: '11', label: 'purple storm', stability: 'temporal' },
-]
+import { RouterLink } from 'vue-router'
+import {
+  actionOpts,
+  castSlotAxes,
+  characterOpts,
+  streamOpts,
+  timeOpts,
+} from '../data/castLexicon.js'
 
 const ab = ref(0)
 const cd = ref(1)
@@ -268,8 +297,9 @@ const bitPairLabels = ['00', '01', '10', '11']
 const decisionColumns = computed(() => {
   const xs = NET_COL_X
   const r = NET_R
-  const mk4 = (key, title, titleX, cx, labels, activeIdx, layerClass) => ({
+  const mk4 = (key, slot, title, titleX, cx, labels, activeIdx, layerClass) => ({
     key,
+    slot,
     title,
     titleX,
     layerClass,
@@ -289,13 +319,14 @@ const decisionColumns = computed(() => {
   const timShort = timeOpts.map((o) => o.label.split(' ').pop() || o.label)
 
   return [
-    mk4('in', 'Input · AB', xs[0] - 28, xs[0], bitPairLabels, ab.value, 'net-layer--in'),
-    mk4('ch', 'Character · WHO', xs[1] - 52, xs[1], charShort, ab.value, 'net-layer--hid'),
-    mk4('ac', 'Action · HOW', xs[2] - 44, xs[2], actShort, cd.value, 'net-layer--hid'),
-    mk4('st', 'Stream · WHAT', xs[3] - 48, xs[3], strShort, ef.value, 'net-layer--hid'),
-    mk4('tm', 'Time · WHEN', xs[4] - 40, xs[4], timShort, gh.value, 'net-layer--hid'),
+    mk4('in', 'ab', 'Input · AB', xs[0] - 28, xs[0], bitPairLabels, ab.value, 'net-layer--in'),
+    mk4('ch', 'ab', 'Character · WHO', xs[1] - 52, xs[1], charShort, ab.value, 'net-layer--hid'),
+    mk4('ac', 'cd', 'Action · HOW', xs[2] - 44, xs[2], actShort, cd.value, 'net-layer--hid'),
+    mk4('st', 'ef', 'Stream · WHAT', xs[3] - 48, xs[3], strShort, ef.value, 'net-layer--hid'),
+    mk4('tm', 'gh', 'Time · WHEN', xs[4] - 40, xs[4], timShort, gh.value, 'net-layer--hid'),
     {
       key: 'out',
+      slot: null,
       title: 'Output · edge',
       titleX: xs[5] - 46,
       layerClass: 'net-layer--out',
@@ -369,8 +400,27 @@ const decisionNetAria = computed(() => {
   const a = actionOpts[cd.value].label
   const s = streamOpts[ef.value].label
   const t = timeOpts[gh.value].label
-  return `Six columns: AB input, Character ${c}, Action ${a}, Stream ${s}, Time ${t}, then output hex ${hexByte.value}. Bold lines show the active path for the current composer.`
+  return `CAST decision net: AB input, Character ${c}, Action ${a}, Stream ${s}, Time ${t}, output ${hexByte.value}. Bold lines show the active path. Click a node in the first five columns to change the composer.`
 })
+
+function pickNetSlot(slot, index) {
+  if (slot === 'ab') ab.value = index
+  else if (slot === 'cd') cd.value = index
+  else if (slot === 'ef') ef.value = index
+  else if (slot === 'gh') gh.value = index
+}
+
+function onNetNodeKeydown(ev, slot, index) {
+  if (ev.key === 'Enter' || ev.key === ' ') {
+    ev.preventDefault()
+    pickNetSlot(slot, index)
+  }
+}
+
+function netNodeAria(col, node) {
+  const state = node.active ? 'selected' : 'not selected'
+  return `${col.title}: ${node.label}, ${state}. Press Enter or Space to select.`
+}
 
 const sceneLine = computed(() => {
   const c = characterOpts[ab.value]
@@ -510,6 +560,25 @@ const challengeSceneLine = computed(() => {
   stroke: rgba(206, 255, 228, 0.85);
 }
 
+.net-node-hitarea {
+  fill: transparent;
+  stroke: none;
+  pointer-events: all;
+}
+
+.net-node-group--hit {
+  cursor: pointer;
+}
+
+.net-node-group--hit:focus {
+  outline: none;
+}
+
+.net-node-group--hit:focus-visible .net-node {
+  stroke: #f1d4aa;
+  stroke-width: 2.5px;
+}
+
 .net-node-label {
   fill: rgba(6, 9, 14, 0.92);
   font-size: 6.5px;
@@ -644,12 +713,56 @@ const challengeSceneLine = computed(() => {
   gap: 0.75rem;
 }
 
+.slot-grid h5 {
+  margin: 0 0 0.15rem;
+}
+
+.slot-axis-caption {
+  margin: 0 0 0.45rem;
+  font-size: 0.68rem;
+  line-height: 1.35;
+  color: rgba(168, 187, 223, 0.78);
+}
+
 .slot-grid ul {
   margin: 0;
   padding-left: 1rem;
   font-size: 0.78rem;
   color: rgba(226, 232, 244, 0.85);
   line-height: 1.45;
+}
+
+.slot-grid li {
+  margin-bottom: 0.5rem;
+}
+
+.slot-row-main {
+  display: block;
+}
+
+.slot-row-when {
+  display: block;
+  margin-top: 0.12rem;
+  font-size: 0.65rem;
+  line-height: 1.35;
+  color: rgba(168, 187, 223, 0.72);
+}
+
+.cast-doc-link {
+  margin: 0.75rem 0 0;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: rgba(200, 212, 236, 0.88);
+}
+
+.cast-doc-link :deep(a) {
+  color: #f1d4aa;
+  font-weight: 600;
+}
+
+.cast-doc-link code {
+  font-size: 0.72em;
+  color: rgba(241, 212, 170, 0.95);
 }
 
 .cast-bridge ul {
