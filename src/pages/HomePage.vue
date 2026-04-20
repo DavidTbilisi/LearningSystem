@@ -2,8 +2,6 @@
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import DocumentDeepDive from '../components/DocumentDeepDive.vue'
-import DocumentList from '../components/DocumentList.vue'
-import DocumentView from '../components/DocumentView.vue'
 import SystemMap from '../components/SystemMap.vue'
 import WeightSpectrum from '../components/WeightSpectrum.vue'
 import {
@@ -186,17 +184,7 @@ function openDoc(docOrId) {
       />
     </section>
 
-    <main class="workspace">
-      <aside class="catalog-panel">
-        <DocumentList
-          :docs="visibleDocs"
-          :selected-id="selectedDocId"
-          :tier-meta="tierMeta"
-          :tier-order="tierOrder"
-          @select="selectDoc"
-        />
-      </aside>
-
+    <main class="home-atlas-main">
       <section class="map-panel">
         <div class="stage-header">
           <div class="stage-copy">
@@ -227,7 +215,7 @@ function openDoc(docOrId) {
             <h3>Flow from comprehension to operations</h3>
           </div>
           <p class="panel-note">
-            Tap a node to update the preview, then open the full page for the selected document.
+            Tap a node to update the selection in the header above, then open the full document page.
           </p>
         </div>
 
@@ -241,15 +229,6 @@ function openDoc(docOrId) {
 
         <DocumentDeepDive :doc="selectedDoc" />
       </section>
-
-      <aside class="inspector-panel">
-        <DocumentView
-          :doc="selectedDoc"
-          :all-docs="systemDocs"
-          :tier-meta="tierMeta"
-          @select="openDoc"
-        />
-      </aside>
     </main>
   </div>
 </template>

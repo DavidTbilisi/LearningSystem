@@ -151,9 +151,7 @@ code {
 .hero-brand,
 .hero-focus,
 .controls,
-.catalog-panel,
-.map-panel,
-.inspector-panel {
+.map-panel {
   border: 1px solid rgba(169, 188, 218, 0.12);
   background: rgba(9, 14, 24, 0.72);
   backdrop-filter: blur(18px);
@@ -447,32 +445,21 @@ code {
   transform: translateY(-1px);
 }
 
-.workspace {
-  display: grid;
-  grid-template-columns: minmax(200px, 0.7fr) minmax(320px, 1.55fr) minmax(220px, 0.75fr);
+.home-atlas-main {
+  display: flex;
+  flex-direction: column;
   gap: 1rem;
-  align-items: start;
   max-width: 100%;
 }
 
-.catalog-panel,
-.map-panel,
-.inspector-panel {
+.map-panel {
   border-radius: 28px;
   padding: 1rem;
   animation: rise-in 760ms ease;
   min-width: 0;
-}
-
-.catalog-panel {
-  position: sticky;
-  top: 1rem;
-  align-self: start;
-}
-
-.map-panel {
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
 .stage-header {
@@ -534,31 +521,6 @@ code {
   color: rgba(221, 228, 240, 0.68);
   line-height: 1.5;
   text-align: right;
-}
-
-.inspector-panel {
-  position: sticky;
-  top: 1rem;
-  align-self: start;
-}
-
-/* Home atlas: keep side rails readable — scroll inside panel instead of endless column */
-.catalog-panel .doc-list,
-.inspector-panel .doc-view {
-  max-height: min(72vh, 880px);
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding-right: 0.15rem;
-  scrollbar-gutter: stable;
-}
-
-.inspector-panel .markdown-body {
-  font-size: 0.92rem;
-  line-height: 1.62;
-}
-
-.inspector-panel .doc-title-block h2 {
-  font-size: clamp(1.35rem, 2.2vw, 1.85rem);
 }
 
 .document-page-shell {
@@ -716,22 +678,6 @@ code {
     min-height: 0;
   }
 
-  .workspace {
-    grid-template-columns: minmax(220px, 0.42fr) minmax(0, 1fr);
-  }
-
-  .inspector-panel {
-    grid-column: 1 / -1;
-    position: static;
-    max-width: 44rem;
-    width: 100%;
-    margin-inline: auto;
-  }
-
-  .catalog-panel .doc-list,
-  .inspector-panel .doc-view {
-    max-height: none;
-  }
 }
 
 @media (max-width: 1120px) {
@@ -755,10 +701,6 @@ code {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .workspace {
-    grid-template-columns: 1fr;
-  }
-
   .visual-controls {
     grid-template-columns: 1fr;
   }
@@ -768,8 +710,6 @@ code {
     grid-template-columns: 1fr;
   }
 
-  .catalog-panel,
-  .inspector-panel,
   .document-side {
     position: static;
   }
@@ -800,9 +740,7 @@ code {
   .hero-brand,
   .hero-focus,
   .controls,
-  .catalog-panel,
   .map-panel,
-  .inspector-panel,
   .doc-hero-copy,
   .doc-hero-meta,
   .document-main,
@@ -812,9 +750,7 @@ code {
 
   .hero-brand,
   .hero-focus,
-  .catalog-panel,
   .map-panel,
-  .inspector-panel,
   .doc-hero-copy,
   .doc-hero-meta,
   .document-main,
