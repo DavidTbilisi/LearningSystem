@@ -21,6 +21,8 @@
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
+    "@emnapi/core": "1.10.0",
+    "@emnapi/runtime": "1.10.0",
     "@playwright/test": "^1.51.0",
     "@vitejs/plugin-vue": "^6.0.5",
     "vite": "^8.0.4",
