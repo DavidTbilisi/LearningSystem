@@ -16,11 +16,11 @@ Every 4-bit value (hex 0–F) = **Element × State**.
 ```
                     STATE →
                     00 Solid   01 Liquid   10 Gas      11 Plasma
-ELEMENT ↓
-00 Earth            0 (rock)   1 (mud)     2 (dust)    3 (magma)
-01 Water            4 (ice)    5 (ocean)   6 (mist)    7 (storm)
-10 Air              8 (crystal)9 (dew)     A (breeze)  B (aurora)
+ELEMENT ↓ (rows Fire → Earth — matches studio matrix; bits unchanged)
 11 Fire             C (ember)  D (lava)    E (smoke)   F (inferno)
+10 Air              8 (crystal)9 (dew)     A (breeze)  B (aurora)
+01 Water            4 (ice)    5 (ocean)   6 (mist)    7 (storm)
+00 Earth            0 (rock)   1 (mud)     2 (dust)    3 (magma)
 ```
 
 ---

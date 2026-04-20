@@ -57,23 +57,15 @@ const states = [
   { label: 'Plasma', bits: '11' },
 ]
 
+/** Rows top → bottom: Fire, Air, Water, Earth (reversed from 00→11 canonical listing). Hex mapping unchanged. */
 const matrix = [
   {
-    element: 'Earth',
+    element: 'Fire',
     states: [
-      { hex: '0', scene: 'Rock wall', element: 'Earth', state: 'Solid' },
-      { hex: '1', scene: 'Mud pit', element: 'Earth', state: 'Liquid' },
-      { hex: '2', scene: 'Dust cloud', element: 'Earth', state: 'Gas' },
-      { hex: '3', scene: 'Magma flow', element: 'Earth', state: 'Plasma' },
-    ],
-  },
-  {
-    element: 'Water',
-    states: [
-      { hex: '4', scene: 'Ice block', element: 'Water', state: 'Solid' },
-      { hex: '5', scene: 'Ocean wave', element: 'Water', state: 'Liquid' },
-      { hex: '6', scene: 'Mist veil', element: 'Water', state: 'Gas' },
-      { hex: '7', scene: 'Lightning storm', element: 'Water', state: 'Plasma' },
+      { hex: 'C', scene: 'Ember', element: 'Fire', state: 'Solid' },
+      { hex: 'D', scene: 'Lava flow', element: 'Fire', state: 'Liquid' },
+      { hex: 'E', scene: 'Smoke column', element: 'Fire', state: 'Gas' },
+      { hex: 'F', scene: 'Inferno wall', element: 'Fire', state: 'Plasma' },
     ],
   },
   {
@@ -86,12 +78,21 @@ const matrix = [
     ],
   },
   {
-    element: 'Fire',
+    element: 'Water',
     states: [
-      { hex: 'C', scene: 'Ember', element: 'Fire', state: 'Solid' },
-      { hex: 'D', scene: 'Lava flow', element: 'Fire', state: 'Liquid' },
-      { hex: 'E', scene: 'Smoke column', element: 'Fire', state: 'Gas' },
-      { hex: 'F', scene: 'Inferno wall', element: 'Fire', state: 'Plasma' },
+      { hex: '4', scene: 'Ice block', element: 'Water', state: 'Solid' },
+      { hex: '5', scene: 'Ocean wave', element: 'Water', state: 'Liquid' },
+      { hex: '6', scene: 'Mist veil', element: 'Water', state: 'Gas' },
+      { hex: '7', scene: 'Lightning storm', element: 'Water', state: 'Plasma' },
+    ],
+  },
+  {
+    element: 'Earth',
+    states: [
+      { hex: '0', scene: 'Rock wall', element: 'Earth', state: 'Solid' },
+      { hex: '1', scene: 'Mud pit', element: 'Earth', state: 'Liquid' },
+      { hex: '2', scene: 'Dust cloud', element: 'Earth', state: 'Gas' },
+      { hex: '3', scene: 'Magma flow', element: 'Earth', state: 'Plasma' },
     ],
   },
 ]
