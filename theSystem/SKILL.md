@@ -61,6 +61,15 @@ Operational layer
 
 ---
 
+## Meta: Learning this ecosystem itself
+
+The stack is large on purpose; **onboarding is a separate skill** from using any one subsystem.
+
+- **Onboarding path (minimal · mid · maximal):** `references/onboarding-path.md` — week-by-week depth, promotion criteria, **spacing defaults**, **pruning rules**, cadence tables, under-load policy, and monthly verification against real sources.
+- **Read SKILL for the map once**, then follow onboarding for **order and caps**; return to SKILL when choosing *which* encoder fits a new kind of data.
+
+---
+
 ## System Reference
 
 ### Comprehension & Problem-Solving (Tier 1)

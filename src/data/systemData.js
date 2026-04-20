@@ -47,6 +47,7 @@ export const tierMeta = {
 
 const knownPositions = {
   SKILL: { x: 0, y: 80 },
+  'onboarding-path': { x: -280, y: 80 },
   'comprehension-protocol': { x: -580, y: 310 },
   'confusion-triage': { x: -348, y: 310 },
   'heuristic-palace': { x: -116, y: 310 },
@@ -82,6 +83,7 @@ const curatedMetadata = {
       'Serves as the entry point to the whole stack',
     ],
     related: [
+      'onboarding-path',
       'comprehension-protocol',
       'concept-encoding',
       'procedure-encoding',
@@ -89,6 +91,20 @@ const curatedMetadata = {
       'cast-system',
       'retrieval-protocol',
     ],
+  },
+  'onboarding-path': {
+    tier: 'orchestration',
+    weight: 98,
+    status: 'foundation',
+    shortLabel: 'Onboarding',
+    summary:
+      'Minimal, mid, and maximal paths to learn the stack step by step; default spacing, pruning, cadence, and under-load policy.',
+    highlights: [
+      'Three depth levels with week-by-week milestones',
+      'Anki spacing defaults and review ceilings by level',
+      'Prune cards, palace loci, and graph edges deliberately',
+    ],
+    related: ['SKILL', 'comprehension-protocol', 'retrieval-protocol', 'measurement-framework', 'metacognitive-checklist'],
   },
   'comprehension-protocol': {
     tier: 'comprehension',
@@ -359,6 +375,10 @@ const curatedMetadata = {
 }
 
 const curatedEdgePairs = [
+  ['SKILL', 'onboarding-path'],
+  ['onboarding-path', 'comprehension-protocol'],
+  ['onboarding-path', 'retrieval-protocol'],
+  ['onboarding-path', 'measurement-framework'],
   ['SKILL', 'comprehension-protocol'],
   ['SKILL', 'concept-encoding'],
   ['SKILL', 'procedure-encoding'],
