@@ -10,17 +10,17 @@ one unlocks the others.
 
 Every 4-bit value (hex 0–F) = **Element × State**.
 
-- **High bits (0–1): Element** — 00 Earth · 01 Air · 10 Water · 11 Earth (two Earth bands: 0–3 surface, C–F deep)
-- **Low bits (2–3): State** — 00 Solid · 01 Liquid · 10 Gas · 11 Plasma
+- **High bits (3–2 of the nibble, MSB first): Element** — 00 Fire · 01 Air · 10 Water · 11 Earth
+- **Low bits (1–0): State** — 00 Solid · 01 Liquid · 10 Gas · 11 Plasma
 
 ```
                     STATE →
                     00 Solid   01 Liquid   10 Gas      11 Plasma
 ELEMENT ↓ (rows match studio matrix top → bottom)
-00 Earth            0 (rock)   1 (mud)     2 (dust)    3 (magma)
+00 Fire             0 (ember)  1 (lava)    2 (smoke)   3 (inferno)
 01 Air              4 (crystal)5 (dew)     6 (breeze)  7 (aurora)
 10 Water            8 (ice)    9 (ocean)   A (mist)    B (storm)
-11 Earth            C (bedrock)D (clay)    E (sinkhole)F (mantle)
+11 Earth            C (rock)   D (mud)     E (dust)    F (magma)
 ```
 
 ---
@@ -29,10 +29,10 @@ ELEMENT ↓ (rows match studio matrix top → bottom)
 
 | Hex | Bits | Element | State | Scene |
 |-----|------|---------|-------|-------|
-| **0** | 0000 | Earth | Solid | 🪨 Rock wall |
-| **1** | 0001 | Earth | Liquid | 🟫 Mud pit |
-| **2** | 0010 | Earth | Gas | 🌫️ Dust cloud |
-| **3** | 0011 | Earth | Plasma | 🌋 Magma flow |
+| **0** | 0000 | Fire | Solid | 🧱 Ember (glowing coal) |
+| **1** | 0001 | Fire | Liquid | 🌋 Lava flow |
+| **2** | 0010 | Fire | Gas | 💨 Smoke column |
+| **3** | 0011 | Fire | Plasma | 🔥 Inferno wall |
 | **4** | 0100 | Air | Solid | 💎 Crystal |
 | **5** | 0101 | Air | Liquid | 💧 Dew drop |
 | **6** | 0110 | Air | Gas | 🌬️ Breeze |
@@ -41,17 +41,17 @@ ELEMENT ↓ (rows match studio matrix top → bottom)
 | **9** | 1001 | Water | Liquid | 🌊 Ocean wave |
 | **A** | 1010 | Water | Gas | 💨 Mist veil |
 | **B** | 1011 | Water | Plasma | ⛈️ Lightning storm |
-| **C** | 1100 | Earth | Solid | 🪨 Bedrock slab |
-| **D** | 1101 | Earth | Liquid | 🟫 Clay vein |
-| **E** | 1110 | Earth | Gas | 🌫️ Sinkhole breath |
-| **F** | 1111 | Earth | Plasma | 🌋 Mantle flare |
+| **C** | 1100 | Earth | Solid | 🪨 Rock wall |
+| **D** | 1101 | Earth | Liquid | 🟫 Mud pit |
+| **E** | 1110 | Earth | Gas | 🌫️ Dust cloud |
+| **F** | 1111 | Earth | Plasma | 🌋 Magma flow |
 
-**Note:** Some scenes collide visually (3 surface magma vs F deep mantle flare, A mist vs 2 dust).
-Disambiguate by the *high nibble* (00 vs 11 Earth bands, 01 Air vs 10 Water):
-- **3** = 00 Earth plasma (surface erupting ground)
-- **F** = 11 Earth plasma (deep / subduction heat)
+**Note:** Some scenes collide visually (2 smoke vs E dust, A mist vs 6 breeze motion).
+Disambiguate by the *high nibble* (00 Fire vs 10 Water gas, 01 Air vs 11 Earth):
+- **2** = 00 Fire gas (hot rising smoke)
+- **E** = 11 Earth gas (dry dust lifting)
 - **A** = 10 Water gas (cool vapor bank)
-- **2** = 00 Earth gas (dry dust lifting)
+- **6** = 01 Air gas (clear sky motion)
 
 ---
 
@@ -61,7 +61,7 @@ A 4-bit value = one hex scene. Use when encoding binary directly:
 
 - `1010` → A → Mist veil
 - `0101` → 5 → Dew drop
-- `1111` → F → Mantle flare
+- `1111` → F → Magma flow
 
 Two nibbles chain to form a byte (see 8-bit section).
 
@@ -166,16 +166,14 @@ The elemental "state" axis maps to CAST action verbs, and the elemental
 | 10 | Gas | spreading |
 | 11 | Plasma | exploding |
 
-| Bits | Element (elemental) | Stream (CAST) |
-|------|---------------------|---------------|
-| 00 | Earth | rock |
+| Bits | Element (elemental nibble) | Stream (CAST) |
+|------|------------------------------|----------------|
+| 00 | Fire | rock |
 | 01 | Air | cloud |
 | 10 | Water | water |
 | 11 | Earth | stone |
 
-So "solid earth" (hex 0) = "crushing rock" (CAST 00-stream-00). The verb form
-is what changes when you shift from binary-value thinking to edge-relationship
-thinking.
+So "solid fire" (hex 0, ember) lines up with the same **state** slot as CAST "crushing" (solid); the stream image (rock / cloud / water / stone) still names what moves. The verb form is what changes when you shift from binary-value thinking to edge-relationship thinking.
 
 ---
 

@@ -175,7 +175,7 @@ Full 100-entry table: `references/sem3-full.md`
 
 #### 5. Hex System (elemental cross-matrix)
 - Encodes **hex digits 0–F** as Element × State combinations
-- Elements: 00 Earth, 01 Air, 10 Water, 11 Earth (high nibble; two Earth bands: surface 0–3, deep 11xx)
+- Elements: 00 Fire, 01 Air, 10 Water, 11 Earth (high nibble of the 4-bit hex digit)
 - States: 00 Solid, 01 Liquid, 10 Gas, 11 Plasma
 - Examples: `0`=rock wall, `5`=dew drop, `A`=mist veil, `F`=mantle flare
 - Full table: `references/binary-hex.md`

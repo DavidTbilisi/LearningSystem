@@ -68,7 +68,7 @@ The words **rock, lightning, lava, mud, cloud, ocean, storm, wave, fire,
 water, ice** appear across three systems:
 
 - **SEM3** uses them as category items (e.g., Touch 44 = Rock, Vision 05 = Lightning)
-- **Hex/Binary** uses them as element×state scenes (Hex 0 = Rock wall, Hex B = Lightning storm)
+- **Hex/Binary** uses them as element×state scenes (Hex 0 = Ember / fire-solid, Hex B = Lightning storm / water-plasma)
 - **CAST** uses them as stream/time values (Stream 00 = rock, Time 11 = purple storm)
 
 **The rule: role in the scene determines the system.**
@@ -81,7 +81,7 @@ water, ice** appear across three systems:
 
 Concretely:
 - **SEM3 rock** (touch 44) is held, felt, stepped on
-- **Hex 0 rock** is a wall, structural backdrop
+- **Hex C (earth-solid)** is the rock wall — structural backdrop; **hex 0** is fire-solid (ember), not a wall
 - **CAST rock** is data moving along an edge
 
 If the scene has *multiple* rocks, add a distinguishing detail: sensory rock is

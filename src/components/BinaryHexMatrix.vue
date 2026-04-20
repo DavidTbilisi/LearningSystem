@@ -21,8 +21,8 @@
         <span>{{ state.bits }}</span>
       </div>
 
-      <template v-for="row in matrix" :key="row.element">
-        <div class="grid-row-label">{{ row.element }}</div>
+      <template v-for="row in matrix" :key="row.rowKey">
+        <div class="grid-row-label">{{ row.rowLabel }}</div>
         <button
           v-for="cell in row.states"
           :key="cell.hex"
@@ -57,19 +57,21 @@ const states = [
   { label: 'Plasma', bits: '11' },
 ]
 
-/** High nibble: 00 Earth, 01 Air, 10 Water, 11 Earth (second band). Rows top → bottom match this order. */
+/** High nibble (bits 3–2 of the hex digit): 00 Fire, 01 Air, 10 Water, 11 Earth. Rows top → bottom. */
 const matrix = [
   {
-    element: 'Earth · 00',
+    rowKey: '00-fire',
+    rowLabel: '00 · Fire',
     states: [
-      { hex: '0', scene: 'Rock wall', element: 'Earth', state: 'Solid' },
-      { hex: '1', scene: 'Mud pit', element: 'Earth', state: 'Liquid' },
-      { hex: '2', scene: 'Dust cloud', element: 'Earth', state: 'Gas' },
-      { hex: '3', scene: 'Magma flow', element: 'Earth', state: 'Plasma' },
+      { hex: '0', scene: 'Ember', element: 'Fire', state: 'Solid' },
+      { hex: '1', scene: 'Lava flow', element: 'Fire', state: 'Liquid' },
+      { hex: '2', scene: 'Smoke column', element: 'Fire', state: 'Gas' },
+      { hex: '3', scene: 'Inferno wall', element: 'Fire', state: 'Plasma' },
     ],
   },
   {
-    element: 'Air · 01',
+    rowKey: '01-air',
+    rowLabel: '01 · Air',
     states: [
       { hex: '4', scene: 'Crystal', element: 'Air', state: 'Solid' },
       { hex: '5', scene: 'Dew drop', element: 'Air', state: 'Liquid' },
@@ -78,7 +80,8 @@ const matrix = [
     ],
   },
   {
-    element: 'Water · 10',
+    rowKey: '10-water',
+    rowLabel: '10 · Water',
     states: [
       { hex: '8', scene: 'Ice block', element: 'Water', state: 'Solid' },
       { hex: '9', scene: 'Ocean wave', element: 'Water', state: 'Liquid' },
@@ -87,12 +90,13 @@ const matrix = [
     ],
   },
   {
-    element: 'Earth · 11',
+    rowKey: '11-earth',
+    rowLabel: '11 · Earth',
     states: [
-      { hex: 'C', scene: 'Bedrock slab', element: 'Earth', state: 'Solid' },
-      { hex: 'D', scene: 'Clay vein', element: 'Earth', state: 'Liquid' },
-      { hex: 'E', scene: 'Sinkhole breath', element: 'Earth', state: 'Gas' },
-      { hex: 'F', scene: 'Mantle flare', element: 'Earth', state: 'Plasma' },
+      { hex: 'C', scene: 'Rock wall', element: 'Earth', state: 'Solid' },
+      { hex: 'D', scene: 'Mud pit', element: 'Earth', state: 'Liquid' },
+      { hex: 'E', scene: 'Dust cloud', element: 'Earth', state: 'Gas' },
+      { hex: 'F', scene: 'Magma flow', element: 'Earth', state: 'Plasma' },
     ],
   },
 ]
