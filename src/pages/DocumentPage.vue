@@ -1,10 +1,11 @@
 <script setup>
-import { computed } from 'vue'
-import { RouterLink, useRouter } from 'vue-router'
+import { computed, nextTick, watch } from 'vue'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 import DocumentDeepDive from '../components/DocumentDeepDive.vue'
 import RelatedOrbit from '../components/RelatedOrbit.vue'
 import DocumentView from '../components/DocumentView.vue'
 import { systemDocMap, systemDocs, tierMeta } from '../data/systemData'
+import { parseDocSectionId, scrollToDocSectionById } from '../utils/docSectionScroll'
 
 const props = defineProps({
   id: {
@@ -13,6 +14,7 @@ const props = defineProps({
   },
 })
 
+const route = useRoute()
 const router = useRouter()
 
 const doc = computed(() => systemDocMap[props.id] || systemDocs[0])
@@ -25,6 +27,25 @@ function openDoc(docOrId) {
   const nextId = typeof docOrId === 'string' ? docOrId : docOrId.id
   router.push({ name: 'document', params: { id: nextId } })
 }
+
+function scheduleScrollToMarkdownSection() {
+  const id = parseDocSectionId(route.query.section)
+  if (!id) return
+
+  const tryScroll = (attemptsLeft) => {
+    if (scrollToDocSectionById(id, { behavior: 'instant' })) return
+    if (attemptsLeft <= 0) return
+    requestAnimationFrame(() => tryScroll(attemptsLeft - 1))
+  }
+
+  void nextTick(() => tryScroll(12))
+}
+
+watch(
+  () => [props.id, route.query.section, doc.value.content],
+  () => scheduleScrollToMarkdownSection(),
+  { flush: 'post', immediate: true },
+)
 </script>
 
 <template>

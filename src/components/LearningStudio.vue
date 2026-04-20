@@ -190,7 +190,8 @@ import BinaryHexMatrix from './BinaryHexMatrix.vue'
 import CastStudioVisuals from './CastStudioVisuals.vue'
 import ExampleStepper from './ExampleStepper.vue'
 import { docExamples } from '../data/exampleData'
-import { cleanStudioText, docHeadingAnchorId } from '../utils/markdownPlain'
+import { scrollToDocSectionById } from '../utils/docSectionScroll'
+import { cleanStudioText, createDocHeadingIdFactory } from '../utils/markdownPlain'
 
 const props = defineProps({
   doc: {
@@ -224,6 +225,7 @@ function extractSections(content) {
   const headingRegex = /^##+\s+(.+)$/gm
   const sections = []
   const matches = [...content.matchAll(headingRegex)]
+  const nextHeadingId = createDocHeadingIdFactory()
 
   matches.forEach((match, index) => {
     const start = match.index + match[0].length
@@ -244,7 +246,7 @@ function extractSections(content) {
       sections.push({
         label: cleanStudioText(match[1].trim()),
         body: cleanedBody,
-        anchorId: docHeadingAnchorId(match[1].trim()),
+        anchorId: nextHeadingId(match[1].trim()),
       })
     }
   })
@@ -305,11 +307,7 @@ function onStepRangeInput(event) {
 }
 
 function scrollToDocHeading(anchorId) {
-  if (!anchorId) return
-  const el = document.getElementById(anchorId)
-  if (el) {
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }
+  scrollToDocSectionById(anchorId)
 }
 
 function shouldIgnoreStudioKeys(target) {

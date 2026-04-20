@@ -6,10 +6,18 @@ test.describe('CAST document', () => {
   })
 
   test('shows document hero, orbit, and markdown', async ({ page }) => {
+    await expect(page).toHaveTitle(/CAST \+ Georgian Node System.*LearningSystem/i)
     await expect(page.locator('.doc-hero-copy h1')).toHaveText(/CAST \+ Georgian Node System/i)
     await expect(page.getByRole('heading', { name: /CAST orbit/i })).toBeVisible()
     await expect(page.getByRole('heading', { name: /Markdown document/i })).toBeVisible()
     await expect(page.locator('#doc-section-representation-atlas-every-surface-in-this-app').first()).toBeVisible()
+  })
+
+  test('scrolls to markdown section via ?section= query', async ({ page }) => {
+    const sectionId = 'doc-section-representation-atlas-every-surface-in-this-app'
+    await page.goto(`/#/docs/cast-system?section=${sectionId}`)
+    await expect(page).toHaveTitle(/CAST \+ Georgian Node System.*LearningSystem/i)
+    await expect(page.locator(`#${sectionId}`).first()).toBeInViewport()
   })
 
   test('learning studio tabs and CAST playground representations', async ({ page }) => {

@@ -40,8 +40,8 @@
 
 <script setup>
 import { computed } from 'vue'
-import { marked } from 'marked'
-import { docHeadingAnchorId } from '../utils/markdownPlain'
+import { Marked, setOptions } from 'marked'
+import { createDocHeadingIdFactory } from '../utils/markdownPlain'
 
 const props = defineProps({
   doc: {
@@ -60,19 +60,9 @@ const props = defineProps({
 
 defineEmits(['select'])
 
-marked.setOptions({
+setOptions({
   breaks: true,
   gfm: true,
-})
-
-marked.use({
-  renderer: {
-    heading({ tokens, depth, text }) {
-      const id = docHeadingAnchorId(text)
-      const inner = this.parser.parseInline(tokens)
-      return `<h${depth} id="${id}">${inner}</h${depth}>\n`
-    },
-  },
 })
 
 const tier = computed(() => props.tierMeta[props.doc.tier])
@@ -82,7 +72,20 @@ const relatedDocs = computed(() =>
     .filter(Boolean),
 )
 
-const renderedMarkdown = computed(() => marked.parse(props.doc.content))
+const renderedMarkdown = computed(() => {
+  const nextHeadingId = createDocHeadingIdFactory()
+  const md = new Marked()
+  md.use({
+    renderer: {
+      heading({ tokens, depth, text }) {
+        const id = nextHeadingId(text)
+        const inner = this.parser.parseInline(tokens)
+        return `<h${depth} id="${id}">${inner}</h${depth}>\n`
+      },
+    },
+  })
+  return md.parse(props.doc.content)
+})
 </script>
 
 <style scoped>
@@ -177,6 +180,7 @@ const renderedMarkdown = computed(() => marked.parse(props.doc.content))
   margin: 1.25rem 0 0.65rem;
   line-height: 1.1;
   color: #fbfcff;
+  scroll-margin-top: 5.5rem;
 }
 
 .markdown-body :deep(h1) {

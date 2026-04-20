@@ -1,10 +1,11 @@
 <script setup>
-import { computed, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import DocumentDeepDive from '../components/DocumentDeepDive.vue'
 import SystemMap from '../components/SystemMap.vue'
 import WeightSpectrum from '../components/WeightSpectrum.vue'
 import {
+  systemDocMap,
   systemDocs,
   systemEdges,
   systemStats,
@@ -12,12 +13,77 @@ import {
   tierOrder,
 } from '../data/systemData'
 
+function pickStr(val) {
+  if (val == null || val === '') return ''
+  return Array.isArray(val) ? String(val[0] ?? '') : String(val)
+}
+
+function readHomeQuery(route) {
+  const docPick = pickStr(route.query.doc)
+  const docId = docPick && systemDocMap[docPick] ? docPick : systemDocs[0]?.id || ''
+
+  let tier = 'all'
+  if ('tier' in route.query) {
+    const t = pickStr(route.query.tier)
+    tier = t === 'all' || tierOrder.includes(t) ? t : 'all'
+  }
+
+  let min = 60
+  if ('min' in route.query) {
+    const m = Number(pickStr(route.query.min))
+    if (!Number.isNaN(m) && m >= 54 && m <= 100) min = m
+  }
+
+  let search = ''
+  if ('q' in route.query) search = pickStr(route.query.q)
+
+  return { docId, tier, min, search }
+}
+
+const route = useRoute()
 const router = useRouter()
 
-const selectedDocId = ref(systemDocs[0]?.id || '')
-const activeTier = ref('all')
-const searchTerm = ref('')
-const minWeight = ref(60)
+const initial = readHomeQuery(route)
+const selectedDocId = ref(initial.docId)
+const activeTier = ref(initial.tier)
+const minWeight = ref(initial.min)
+const searchTerm = ref(initial.search)
+
+function normalizedStateQuery() {
+  const q = { doc: selectedDocId.value }
+  if (activeTier.value !== 'all') q.tier = activeTier.value
+  if (minWeight.value !== 60) q.min = String(minWeight.value)
+  const t = searchTerm.value.trim()
+  if (t) q.q = t
+  return q
+}
+
+function routeQueryMatchesState() {
+  const want = normalizedStateQuery()
+  const got = route.query
+  const keys = new Set([...Object.keys(want), ...Object.keys(got)])
+  for (const k of keys) {
+    if (pickStr(want[k]) !== pickStr(got[k])) return false
+  }
+  return true
+}
+
+watch(
+  () => route.query,
+  () => {
+    const next = readHomeQuery(route)
+    selectedDocId.value = next.docId
+    activeTier.value = next.tier
+    minWeight.value = next.min
+    searchTerm.value = next.search
+  },
+  { deep: true },
+)
+
+watch([selectedDocId, activeTier, minWeight, searchTerm], () => {
+  if (routeQueryMatchesState()) return
+  router.replace({ name: 'home', query: normalizedStateQuery() })
+})
 
 const selectedDoc = computed(
   () => systemDocs.find((doc) => doc.id === selectedDocId.value) || systemDocs[0],
@@ -66,6 +132,12 @@ function openDoc(docOrId) {
 
 function setTier(tierId) {
   activeTier.value = tierId
+}
+
+function resetFilters() {
+  searchTerm.value = ''
+  activeTier.value = 'all'
+  minWeight.value = 60
 }
 </script>
 
@@ -187,6 +259,10 @@ function setTier(tierId) {
         </div>
 
         <div class="home-map-wrap">
+          <div v-if="!visibleDocs.length" class="home-filter-empty" role="status">
+            <p>No documents match the current filters.</p>
+            <button type="button" class="home-filter-reset" @click="resetFilters">Reset filters</button>
+          </div>
           <p class="home-map-hint">Architecture map — tap a node. Greyed nodes are filtered out by tier or weight.</p>
           <SystemMap
             :docs="systemDocs"
@@ -569,6 +645,42 @@ function setTier(tierId) {
 
 .home-map-wrap {
   padding: 0 1rem 1rem;
+}
+
+.home-filter-empty {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem 1rem;
+  margin: 0 0 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(241, 196, 132, 0.28);
+  background: rgba(241, 196, 132, 0.07);
+}
+
+.home-filter-empty p {
+  margin: 0;
+  flex: 1 1 200px;
+  font-size: 0.88rem;
+  color: rgba(226, 232, 244, 0.9);
+}
+
+.home-filter-reset {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  padding: 0.45rem 1rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #f4f7fc;
+  background: rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+}
+
+.home-filter-reset:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .home-map-hint {

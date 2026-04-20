@@ -22,14 +22,32 @@ export function cleanStudioText(text) {
     .trim()
 }
 
-/**
- * Id for a markdown ##+ heading line (without leading hashes), aligned with studio walkthrough steps.
- */
-export function docHeadingAnchorId(rawHeadingLine) {
+function headingSlug(rawHeadingLine) {
   const plain = cleanStudioText(rawHeadingLine)
   const slug = plain
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
-  return `doc-section-${slug || 'section'}`
+  return slug || 'section'
+}
+
+/**
+ * Id for a markdown ##+ heading line (first occurrence only — duplicates need {@link createDocHeadingIdFactory}).
+ */
+export function docHeadingAnchorId(rawHeadingLine) {
+  return `doc-section-${headingSlug(rawHeadingLine)}`
+}
+
+/**
+ * Returns a function that assigns unique `id`s when the same heading text appears more than once in one document.
+ */
+export function createDocHeadingIdFactory() {
+  const counts = new Map()
+  return (rawHeadingLine) => {
+    const base = headingSlug(rawHeadingLine)
+    const n = (counts.get(base) || 0) + 1
+    counts.set(base, n)
+    if (n === 1) return `doc-section-${base}`
+    return `doc-section-${base}--${n}`
+  }
 }

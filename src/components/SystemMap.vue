@@ -36,6 +36,7 @@ const emit = defineEmits(['select'])
 
 const cyContainer = ref(null)
 const cyInstance = ref(null)
+let resizeObserver = null
 
 function buildElements() {
   const tierElements = tierOrder.map((tierId) => ({
@@ -123,7 +124,12 @@ function fitGraph() {
   const cy = cyInstance.value
   if (!cy) return
   cy.resize()
-  cy.fit(cy.nodes('[type = "doc"]'), 60)
+  // Fit all elements (tier bands + docs + edges); doc-only bbox clips compound parents.
+  cy.fit(cy.elements(), 72)
+}
+
+function scheduleFit() {
+  requestAnimationFrame(() => fitGraph())
 }
 
 onMounted(() => {
@@ -179,10 +185,6 @@ onMounted(() => {
             'text-valign': 'center',
             'text-halign': 'center',
             'overlay-opacity': 0,
-            'shadow-blur': 22,
-            'shadow-color': '#05070f',
-            'shadow-opacity': 0.18,
-            'shadow-offset-y': 10,
           },
         },
         {
@@ -203,9 +205,6 @@ onMounted(() => {
           style: {
             'background-color': '#fff6d7',
             'border-width': 3,
-            'shadow-opacity': 0.32,
-            'shadow-blur': 30,
-            'shadow-offset-y': 16,
           },
         },
         {
@@ -229,14 +228,25 @@ onMounted(() => {
 
     cyInstance.value = cy
     applyGraphState()
-    fitGraph()
-    window.addEventListener('resize', fitGraph)
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => fitGraph())
+    })
+
+    const el = cyContainer.value
+    if (el && typeof ResizeObserver !== 'undefined') {
+      resizeObserver = new ResizeObserver(() => scheduleFit())
+      resizeObserver.observe(el)
+    } else {
+      window.addEventListener('resize', fitGraph)
+    }
   }
 
   mountGraph()
 })
 
 onBeforeUnmount(() => {
+  resizeObserver?.disconnect()
+  resizeObserver = null
   window.removeEventListener('resize', fitGraph)
   cyInstance.value?.destroy()
 })

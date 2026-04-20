@@ -7,6 +7,7 @@ const route = useRoute()
 
 const navDocs = [
   'SKILL',
+  'onboarding-path',
   'comprehension-protocol',
   'concept-encoding',
   'procedure-encoding',
