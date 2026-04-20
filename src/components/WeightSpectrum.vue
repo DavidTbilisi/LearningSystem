@@ -1,11 +1,11 @@
 <template>
-  <div class="weight-spectrum">
+  <div class="weight-spectrum" :class="{ 'weight-spectrum--compact': compact }">
     <div class="spectrum-head">
       <div>
-        <p class="spectrum-kicker">Signal spectrum</p>
-        <h3>Weighted document skyline</h3>
+        <p class="spectrum-kicker">{{ compact ? 'Skyline' : 'Signal spectrum' }}</p>
+        <h3>{{ compact ? 'Weight preview' : 'Weighted document skyline' }}</h3>
       </div>
-      <p class="spectrum-copy">
+      <p v-if="!compact" class="spectrum-copy">
         Heavier files carry more structural importance in the atlas. Use the slider to
         tighten the field.
       </p>
@@ -40,6 +40,10 @@ defineProps({
     type: Object,
     required: true,
   },
+  compact: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 defineEmits(['select'])
@@ -54,6 +58,17 @@ defineEmits(['select'])
   border-radius: 26px;
   border: 1px solid rgba(169, 188, 218, 0.12);
   background: rgba(9, 14, 24, 0.72);
+}
+
+.weight-spectrum--compact {
+  gap: 0.65rem;
+  padding: 0.75rem 0.85rem;
+  border-radius: 16px;
+  background: rgba(5, 8, 14, 0.55);
+}
+
+.weight-spectrum--compact .spectrum-head h3 {
+  font-size: 1rem;
 }
 
 .spectrum-head {
@@ -130,6 +145,14 @@ defineEmits(['select'])
   transform: translateY(-2px);
 }
 
+.weight-spectrum--compact .spectrum-bars {
+  min-height: 140px;
+}
+
+.weight-spectrum--compact .spectrum-bar {
+  height: 140px;
+}
+
 @media (max-width: 780px) {
   .spectrum-bars {
     min-height: 180px;
@@ -137,6 +160,14 @@ defineEmits(['select'])
 
   .spectrum-bar {
     height: 180px;
+  }
+
+  .weight-spectrum--compact .spectrum-bars {
+    min-height: 120px;
+  }
+
+  .weight-spectrum--compact .spectrum-bar {
+    height: 120px;
   }
 }
 </style>
