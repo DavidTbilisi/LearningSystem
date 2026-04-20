@@ -33,6 +33,7 @@ test.describe('CAST document', () => {
 
     await page.getByTestId('studio-tab-playground').click()
     await expect(page.getByTestId('cast-studio-visuals')).toBeVisible()
+    await expect(page.getByTestId('cast-decision-network')).toBeVisible()
     await expect(page.getByTestId('cast-flow-rail')).toBeVisible()
     await expect(page.getByTestId('cast-composer')).toBeVisible()
 

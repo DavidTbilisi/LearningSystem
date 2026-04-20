@@ -126,6 +126,61 @@
       </div>
     </section>
 
+    <section class="cast-block cast-decision-net" aria-labelledby="cast-net-title">
+      <h4 id="cast-net-title">Layers of decision</h4>
+      <p class="cast-copy">
+        Same idea as stacked layers in a net: each column is one 2-bit choice; many weak connections are possible,
+        but your composer picks one path (bold) from input bits through WHO → HOW → WHAT → WHEN into the edge
+        encoding.
+      </p>
+      <div class="decision-net-scroll" data-testid="cast-decision-network">
+        <svg
+          class="decision-svg"
+          viewBox="0 0 780 210"
+          preserveAspectRatio="xMidYMid meet"
+          role="img"
+          :aria-label="decisionNetAria"
+        >
+          <defs>
+            <linearGradient id="cast-edge-active" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#7cb4ff" />
+              <stop offset="100%" stop-color="#a78bfa" />
+            </linearGradient>
+          </defs>
+          <g v-for="(seg, si) in decisionSegments" :key="`seg-${si}`">
+            <line
+              v-for="(ln, li) in seg.lines"
+              :key="`ln-${si}-${li}`"
+              :x1="ln.x1"
+              :y1="ln.y1"
+              :x2="ln.x2"
+              :y2="ln.y2"
+              :class="['net-line', { 'net-line--active': ln.active }]"
+            />
+          </g>
+          <g v-for="col in decisionColumns" :key="col.key">
+            <text :x="col.titleX" y="22" class="net-title">{{ col.title }}</text>
+            <g v-for="node in col.nodes" :key="node.key">
+              <circle
+                :cx="node.cx"
+                :cy="node.cy"
+                :r="node.r"
+                :class="['net-node', col.layerClass, { 'net-node--active': node.active }]"
+              />
+              <text :x="node.cx" :y="node.cy + 3" class="net-node-label" text-anchor="middle">
+                {{ node.label }}
+              </text>
+            </g>
+          </g>
+        </svg>
+        <ul class="net-legend" aria-hidden="true">
+          <li><span class="swatch swatch-input" /> Input (bit pairs)</li>
+          <li><span class="swatch swatch-hidden" /> Decision (slot options)</li>
+          <li><span class="swatch swatch-out" /> Output (encoding)</li>
+        </ul>
+      </div>
+    </section>
+
     <section class="cast-block cast-challenge">
       <h4>Decode challenge</h4>
       <p class="cast-copy">Reconstruct the four slots from a random byte. Reveal checks your mental parse.</p>
@@ -202,6 +257,121 @@ const hexByte = computed(() =>
   parseInt(bitString.value, 2).toString(16).toUpperCase().padStart(2, '0'),
 )
 
+/** Geometry for “layers of decision” SVG (aligned with composer indices). */
+const NET_COL_X = [58, 178, 298, 418, 538, 658]
+const NET_ROW_Y = (i) => 50 + i * 36
+const NET_OUT_Y = [56, 104, 152]
+const NET_R = 11
+
+const bitPairLabels = ['00', '01', '10', '11']
+
+const decisionColumns = computed(() => {
+  const xs = NET_COL_X
+  const r = NET_R
+  const mk4 = (key, title, titleX, cx, labels, activeIdx, layerClass) => ({
+    key,
+    title,
+    titleX,
+    layerClass,
+    nodes: labels.map((label, i) => ({
+      key: `${key}-${i}`,
+      label,
+      cx,
+      cy: NET_ROW_Y(i),
+      r,
+      active: i === activeIdx,
+    })),
+  })
+
+  const charShort = characterOpts.map((o) => o.label)
+  const actShort = actionOpts.map((o) => o.label.slice(0, 8))
+  const strShort = streamOpts.map((o) => o.label)
+  const timShort = timeOpts.map((o) => o.label.split(' ').pop() || o.label)
+
+  return [
+    mk4('in', 'Input · AB', xs[0] - 28, xs[0], bitPairLabels, ab.value, 'net-layer--in'),
+    mk4('ch', 'Character · WHO', xs[1] - 52, xs[1], charShort, ab.value, 'net-layer--hid'),
+    mk4('ac', 'Action · HOW', xs[2] - 44, xs[2], actShort, cd.value, 'net-layer--hid'),
+    mk4('st', 'Stream · WHAT', xs[3] - 48, xs[3], strShort, ef.value, 'net-layer--hid'),
+    mk4('tm', 'Time · WHEN', xs[4] - 40, xs[4], timShort, gh.value, 'net-layer--hid'),
+    {
+      key: 'out',
+      title: 'Output · edge',
+      titleX: xs[5] - 46,
+      layerClass: 'net-layer--out',
+      nodes: [
+        {
+          key: 'hx',
+          label: hexByte.value,
+          cx: xs[5],
+          cy: NET_OUT_Y[0],
+          r,
+          active: true,
+        },
+        {
+          key: 'mix',
+          label: `${characterOpts[ab.value].label[0]}·${actionOpts[cd.value].label[0]}`,
+          cx: xs[5],
+          cy: NET_OUT_Y[1],
+          r,
+          active: true,
+        },
+        {
+          key: 'sc',
+          label: 'Scene',
+          cx: xs[5],
+          cy: NET_OUT_Y[2],
+          r,
+          active: true,
+        },
+      ],
+    },
+  ]
+})
+
+function meshLines(x0, x1, activeI, activeJ) {
+  const lines = []
+  for (let i = 0; i < 4; i += 1) {
+    for (let j = 0; j < 4; j += 1) {
+      lines.push({
+        x1: x0,
+        y1: NET_ROW_Y(i),
+        x2: x1,
+        y2: NET_ROW_Y(j),
+        active: i === activeI && j === activeJ,
+      })
+    }
+  }
+  return lines
+}
+
+const decisionSegments = computed(() => {
+  const xs = NET_COL_X
+  const g = gh.value
+  const outLines = [0, 1, 2].map((k) => ({
+    x1: xs[4],
+    y1: NET_ROW_Y(g),
+    x2: xs[5],
+    y2: NET_OUT_Y[k],
+    active: true,
+  }))
+  return [
+    { lines: meshLines(xs[0], xs[1], ab.value, ab.value) },
+    { lines: meshLines(xs[1], xs[2], ab.value, cd.value) },
+    { lines: meshLines(xs[2], xs[3], cd.value, ef.value) },
+    { lines: meshLines(xs[3], xs[4], ef.value, g) },
+    { lines: outLines },
+  ]
+})
+
+const decisionNetAria = computed(() => {
+  const c = characterOpts[ab.value].label
+  const a = actionOpts[cd.value].label
+  const s = streamOpts[ef.value].label
+  const t = timeOpts[gh.value].label
+  return `Six columns: AB input, Character ${c}, Action ${a}, Stream ${s}, Time ${t}, then output hex ${hexByte.value}. Bold lines show the active path for the current composer.`
+})
+
 const sceneLine = computed(() => {
   const c = characterOpts[ab.value]
   const a = actionOpts[cd.value]
@@ -274,6 +444,113 @@ const challengeSceneLine = computed(() => {
 .cast-block h5 {
   margin: 0 0 0.5rem;
   color: #fbfcff;
+}
+
+.cast-decision-net .decision-net-scroll {
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+  margin-top: 0.35rem;
+}
+
+.decision-svg {
+  display: block;
+  width: min(100%, 760px);
+  min-width: 520px;
+  margin: 0 auto;
+}
+
+.net-title {
+  fill: rgba(200, 212, 236, 0.88);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.net-line {
+  stroke: rgba(125, 163, 255, 0.16);
+  stroke-width: 1;
+}
+
+.net-line--active {
+  stroke: url(#cast-edge-active);
+  stroke-width: 2.4;
+  stroke-opacity: 1;
+}
+
+.net-node {
+  stroke: rgba(8, 12, 20, 0.95);
+  stroke-width: 1.5;
+}
+
+.net-layer--in .net-node {
+  fill: #b83b4a;
+}
+
+.net-layer--in .net-node--active {
+  fill: #ff5c6c;
+  stroke: rgba(255, 208, 212, 0.95);
+}
+
+.net-layer--hid .net-node {
+  fill: #b86a24;
+}
+
+.net-layer--hid .net-node--active {
+  fill: #ffb24a;
+  stroke: rgba(255, 228, 194, 0.95);
+}
+
+.net-layer--out .net-node {
+  fill: #2a8f5c;
+}
+
+.net-layer--out .net-node--active {
+  fill: #52e39a;
+  stroke: rgba(206, 255, 228, 0.85);
+}
+
+.net-node-label {
+  fill: rgba(6, 9, 14, 0.92);
+  font-size: 6.5px;
+  font-weight: 700;
+  pointer-events: none;
+}
+
+.net-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem 1.1rem;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.68rem;
+  color: rgba(168, 187, 223, 0.82);
+}
+
+.net-legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.swatch-input {
+  background: #ff5c6c;
+}
+
+.swatch-hidden {
+  background: #ffb24a;
+}
+
+.swatch-out {
+  background: #52e39a;
 }
 
 .cast-lead,
