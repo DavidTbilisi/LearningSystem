@@ -373,6 +373,7 @@ When the user wants to create a new deck or encoding scheme:
 - `references/formulas.md` — Formula / symbolic encoding (Greek letters, operators, structural zones)
 - `references/georgian-system.md` — 33-letter Georgian system (nodes, calendar, 33-slot peg)
 - `references/cast-system.md` — CAST edges + graph encoding across domains (code, math, history, argument)
+ - `theSystem/DOME.md` — D.O.M.E.: operation mapping for edges (visual verbs + modifiers)
 
 ### Operational
 - `references/retrieval-protocol.md` — Anki card templates + palace-walk cadence + weak-link repair

@@ -287,15 +287,16 @@ READING ORDER: WHO / HOW / WHAT / WHEN
 
 ---
 
-## Representation atlas — every surface in this app
+Representation atlas — every surface in this app
 
-CAST is intentionally mirrored across modalities so you can choose the channel that matches how you think day-to-day.
-The markdown body is the canonical prose specification with tables, worked domains, and quick reference cards.
 The atlas map places this file on the concept tier so you can see which neighbors to open next — binary-hex for the shared
-bit vocabulary, georgian-system for node identity, retrieval-protocol for how decks consume edges, and collisions for
-disambiguation rules. The weight spectrum treats the document as a signal about how central relational encoding is to
-your current study session. On the document route, the orbit widget renders related files as a small graph so you can
-jump outward without losing the CAST frame. Finally, the learning studio compresses the same story into a walkthrough
+bit vocabulary, georgian-system for node identity, retrieval-protocol for how decks consume edges, collisions for
+disambiguation rules, and D.O.M.E. for choosing consistent visual verbs and modifiers for edges. The weight spectrum treats
+the document as a signal about how central relational encoding is to your current study session. The orbit widget renders
+related files as a small graph so you can jump outward without losing the CAST frame. Finally, the learning studio compresses
+the same story into a walkthrough that follows headings, guided examples that rehearse forward and backward prompts, and a
+playground that adds live composition plus decode drills. Use every representation once during onboarding, then lean on the
+two that stick.
 that follows headings, guided examples that rehearse forward and backward prompts, and a playground that adds live
 composition plus decode drills. Use every representation once during onboarding, then lean on the two that stick.
 

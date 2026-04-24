@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import HomePage from '../pages/HomePage.vue'
 import DocumentPage from '../pages/DocumentPage.vue'
+import CastPlaygroundPage from '../pages/CastPlaygroundPage.vue'
 import { systemDocMap } from '../data/systemData'
 import { parseDocSectionId } from '../utils/docSectionScroll'
 
@@ -19,6 +20,11 @@ const router = createRouter({
       name: 'document',
       component: DocumentPage,
       props: true,
+    },
+    {
+      path: '/playground/cast',
+      name: 'cast-playground',
+      component: CastPlaygroundPage,
     },
   ],
   scrollBehavior(to, from, savedPosition) {
