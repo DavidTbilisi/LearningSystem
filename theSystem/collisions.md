@@ -162,6 +162,23 @@ despite shared word.
 **The rule: CAST characters are always humanoid. Formula "giants" are always
 geometric (Δ mountain, etc.).**
 
+### B9 — Edge verbs and D.O.M.E.
+
+CAST encodes edge structure (who / how / what / when). D.O.M.E. is the
+recommended verbal vocabulary for *how* an edge behaves — the visual verbs and
+modifiers that make different edges feel distinct.
+
+**Rule:** Use D.O.M.E. as the canonical verb set for edges. When two edges
+collapse to the same verb, first apply a D.O.M.E. modifier (medium, intensity,
+timing). If they remain ambiguous, escalate to the CAST layer (different
+Action/Stream bits) or follow the collision rules in Section D (swap or add a
+system-marker).
+
+Practical example: two edges both described as "pours" → change one to
+"pours light" and the other to "pours water" (D.O.M.E. modifiers). If the
+meaning still collides for retrieval, encode the stronger distinction in CAST
+Action/Stream bits.
+
 ---
 
 ## Section C — The General Disambiguation Algorithm

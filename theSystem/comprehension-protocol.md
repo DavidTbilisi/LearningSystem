@@ -237,6 +237,8 @@ screens, use the full protocol. If it's a paragraph, Gate 1 + encode.
 
 - **Gate 1 (Locate)** → uses your existing CAST graph. Find the neighbors. If no neighbors → you need prerequisites first.
 - **Gate 2 (Represent)** → the verbal and symbolic representations feed NEDF's Essence slot. Geometric feeds the image. Computational feeds a PAO chain.
+ - **Gate 2 (Represent)** → the verbal and symbolic representations feed NEDF's Essence slot. Geometric feeds the image. Computational feeds a PAO chain.
+ - **Relational visuals:** when Gate 2 requires a graph/edge view, use **CAST** for the bit/scene encoding and **D.O.M.E.** for choosing consistent action verbs and modifiers that make edges vivid and unambiguous.
 - **Gate 3 (Minimize)** → the MWE is often the single best encoding image.
 - **Gate 4 (Falsify)** → the strongest failure feeds NEDF's Failure slot directly.
 - **Gate 5 (Regenerate)** → this is the Anki card (Format C in concept-encoding.md): "given setup, produce concept."
